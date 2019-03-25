@@ -1,0 +1,46 @@
+{
+  "name": "stixview",
+  "version": "1.0.0",
+  "description": "Embeddable STIX2 graph viewer in JS",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/traut/stixview.git"
+  },
+  "author": "Sergey Polzunov <sergey@polzunov.com>",
+  "license": "BSD-3-Clause",
+  "private": false,
+  "keywords": [
+    "cti",
+    "stix",
+    "stix2",
+    "intelligence",
+    "security"
+  ],
+  "scripts": {
+    "build": "parcel-bundler build src/index.js",
+    "dev": "parcel-bundle src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/traut/stixview/issues"
+  },
+  "homepage": "https://github.com/traut/stixview",
+  "dependencies": {
+    "cytoscape": "^3.5.0",
+    "cytoscape-autopan-on-drag": "^2.1.0",
+    "cytoscape-cola": "^2.3.0",
+    "cytoscape-cose-bilkent": "^4.0.0",
+    "cytoscape-dagre": "^2.2.2",
+    "cytoscape-euler": "^1.2.1",
+    "cytoscape-klay": "^3.1.2",
+    "jquery": "^3.3.1",
+    "underscore": "^1.9.1"
+  },
+  "devDependencies": {
+    "css-loader": "^2.1.1",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  }
+}
