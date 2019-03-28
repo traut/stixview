@@ -17,9 +17,9 @@ Demos
 -----
 
 To see stixview in action, take a look at these demo pages:
-* [writing a report with STIX2 graph, step by step](https://traut.github.io/stixview/story.html)
-* [drag-n-drop graph example](https://traut.github.io/stixview/drag-n-drop.html)
-* [misc](https://traut.github.io/stixview/misc.html)
+* [writing a report with STIX2 graph, step by step](https://traut.github.io/stixview/dist/demos/story.html)
+* [drag-n-drop graph example](https://traut.github.io/stixview/dist/demos/drag-n-drop.html)
+* [misc](https://traut.github.io/stixview/dist/demos/misc.html)
 
 
 Usage

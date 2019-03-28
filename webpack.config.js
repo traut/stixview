@@ -32,15 +32,15 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            filename: 'story.html',
+            filename: 'demos/story.html',
             template: 'src/demos/story.html'
         }),
         new HtmlWebpackPlugin({
-            filename: 'misc.html',
+            filename: 'demos/misc.html',
             template: 'src/demos/misc.html'
         }),
         new HtmlWebpackPlugin({
-            filename: 'drag-n-drop.html',
+            filename: 'demos/drag-n-drop.html',
             template: 'src/demos/drag-n-drop.html'
         }),
     ],
