@@ -8,7 +8,7 @@ module.exports = {
     mode: 'development',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'stixview.bundle.js'
+        filename: 'stixview.bundle.js',
 	},
 	module: {
 		rules:[
@@ -19,11 +19,9 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(png|svg|jpg|gif)$/,
-                use: [
-                    'file-loader'
-                ]
-            },
+                test: /\.svg$/,
+                loader: 'svg-inline-loader'
+            }
 		]
     },
     watch: true,

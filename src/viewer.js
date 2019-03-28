@@ -11,24 +11,23 @@ import dagre from 'cytoscape-dagre';
 
 import autopanOnDrag from 'cytoscape-autopan-on-drag';
 
-import attackPatternIcon from '../icons/attack-pattern.svg';
-import campaignIcon from '../icons/campaign.svg';
-import courseOfActionIcon from '../icons/course-of-action.svg';
-import identityIcon from '../icons/identity.svg';
-import indicatorIcon from '../icons/indicator.svg';
-import intrusionSetIcon from '../icons/intrusion-set.svg';
-import malwareIcon from '../icons/malware.svg';
-import observedDataIcon from '../icons/observed-data.svg';
-import opinionIcon from '../icons/opinion.svg';
-import relationshipIcon from '../icons/relationship.svg';
-import reportIcon from '../icons/report.svg';
-import sightingIcon from '../icons/sighting.svg';
-import threatActorIcon from '../icons/threat-actor.svg';
-import toolIcon from '../icons/tool.svg';
-import vulnerabilityIcon from '../icons/vulnerability.svg';
+const indicatorIcon = require('!svg-inline-loader?removeSVGTagAttrs=false!../icons/indicator.svg');
+const attackPatternIcon = require('!svg-inline-loader?removeSVGTagAttrs=false!../icons/attack-pattern.svg');
+const campaignIcon = require('!svg-inline-loader?removeSVGTagAttrs=false!../icons/campaign.svg');
+const courseOfActionIcon = require('!svg-inline-loader?removeSVGTagAttrs=false!../icons/course-of-action.svg');
+const identityIcon = require('!svg-inline-loader?removeSVGTagAttrs=false!../icons/identity.svg');
+const intrusionSetIcon = require('!svg-inline-loader?removeSVGTagAttrs=false!../icons/intrusion-set.svg');
+const malwareIcon = require('!svg-inline-loader?removeSVGTagAttrs=false!../icons/malware.svg');
+const observedDataIcon = require('!svg-inline-loader?removeSVGTagAttrs=false!../icons/observed-data.svg');
+const opinionIcon = require('!svg-inline-loader?removeSVGTagAttrs=false!../icons/opinion.svg');
+const relationshipIcon = require('!svg-inline-loader?removeSVGTagAttrs=false!../icons/relationship.svg');
+const reportIcon = require('!svg-inline-loader?removeSVGTagAttrs=false!../icons/report.svg');
+const sightingIcon = require('!svg-inline-loader?removeSVGTagAttrs=false!../icons/sighting.svg');
+const threatActorIcon = require('!svg-inline-loader?removeSVGTagAttrs=false!../icons/threat-actor.svg');
+const toolIcon = require('!svg-inline-loader?removeSVGTagAttrs=false!../icons/tool.svg');
+const vulnerabilityIcon = require('!svg-inline-loader?removeSVGTagAttrs=false!../icons/vulnerability.svg');
 
-import hypothesisIcon from '../icons/x-eclecticiq-hypothesis.svg';
-
+const hypothesisIcon = require('!svg-inline-loader?removeSVGTagAttrs=false!../icons/x-eclecticiq-hypothesis.svg');
 
 cytoscape.use(klay);
 cytoscape.use(euler);
@@ -66,61 +65,65 @@ const layoutProperties = {
     }
 }
 
+function encodeSvg(icon) {
+    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(icon);
+}
+
 const iconPerType = {
     'threat-actor': {
         color: '#d32b49',
         shape: 'ellipse',
-        image: threatActorIcon,
+        image: encodeSvg(threatActorIcon),
     },
     tool: {
         color: '#6661ab',
         shape: 'star',
-        image: toolIcon,
+        image: encodeSvg(toolIcon),
     },
     vulnerability: {
         color: '#eaca6b',
         shape: 'diamond',
-        image: vulnerabilityIcon,
+        image: encodeSvg(vulnerabilityIcon),
     },
     malware: {
         color: '#6661ab',
         shape: 'ellipse',
-        image: malwareIcon,
+        image: encodeSvg(malwareIcon),
     },
     'intrusion-set': {
         color: '#396eb6',
         shape: 'ellipse',
-        image: intrusionSetIcon,
+        image: encodeSvg(intrusionSetIcon),
     },
     indicator: {
         color: '#e38850',
         shape: 'pentagon',
-        image: indicatorIcon,
+        image: encodeSvg(indicatorIcon),
     },
     'attack-pattern': {
         color: '#6661ab',
         shape: 'diamond',
-        image: attackPatternIcon,
+        image: encodeSvg(attackPatternIcon),
     },
     'course-of-action': {
         color: '#7fbe82',
         shape: 'ellipse',
-        image: courseOfActionIcon,
+        image: encodeSvg(courseOfActionIcon),
     },
     campaign: {
         color: '#1d6775',
         shape: 'star',
-        image: campaignIcon,
+        image: encodeSvg(campaignIcon),
     },
     report: {
         color: '#2d2b5f',
         shape: 'ellipse',
-        image: reportIcon,
+        image: encodeSvg(reportIcon),
     },
     identity: {
         color: '#9c9d9d',
         shape: 'diamond',
-        image: identityIcon,
+        image: encodeSvg(identityIcon),
     },
     'marking-definition': {
         color: '#72d1fb',
@@ -129,31 +132,31 @@ const iconPerType = {
     sighting: {
         color: '#383839',
         shape: 'ellipse',
-        image: sightingIcon,
+        image: encodeSvg(sightingIcon),
     },
     'observed-data': {
         color: '#AB558C',
         shape: 'ellipse',
-        image: observedDataIcon,
+        image: encodeSvg(observedDataIcon),
     },
     relationship: {
         color: '#31A9C1',
         shape: 'ellipse',
-        image: relationshipIcon,
+        image: encodeSvg(relationshipIcon),
     },
 
     // stix2.1
     opinion: {
         color: '#881177',
         shape: 'ellipse',
-        image: opinionIcon,
+        image: encodeSvg(opinionIcon),
     },
 
     // custom
     'x-eclecticiq-hypothesis': {
         color: '#009688',
         shape: 'ellipse',
-        image: hypothesisIcon,
+        image: encodeSvg(hypothesisIcon),
     },
 
     // placeholder node
