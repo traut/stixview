@@ -7,35 +7,36 @@ let gistCache = {};
 
 
 function loadUrl(url) {
-    return new Promise(function(resolve, reject) {
+    let p = urlCache[url] || new Promise(function(resolve, reject) {
         $.get(url)
             .done(function(res) {
                 let bundle = JSON.parse(res);
-                gistCache[url] = bundle;
                 resolve(bundle);
             })
             .fail(reject);
     });
+    urlCache[url] = p;
+    return p;
 }
 
 
 function loadGist(id, file) {
     let url = 'https://api.github.com/gists/' + id;
 
-    return new Promise(function(resolve, reject) {
-        if (gistCache[id]) {
-            resolce(gistCache[id].files[file].content)
-            return;
-        }
+    let p = gistCache[id] || new Promise(function(resolve, reject) {
         $.get(url)
             .done(function(res) {
-                gistCache[id] = res;
                 file = file || Object.keys(res.files)[0];
                 let details = res.files[file];
-                resolve(JSON.parse(details.content));
+                resolve({
+                    bundle: JSON.parse(details.content),
+                    url: details.raw_url
+                });
             })
             .fail(reject);
     });
+    gistCache[id] = p;
+    return p;
 }
 
 
@@ -78,6 +79,18 @@ function isTrue(prop) {
     return (prop != null && prop != 'false');
 }
 
+
+function downloadData(data) {
+    $('<a />', {
+        'download': data['id'] + '.json',
+        'href' : 'data:application/json,' + encodeURIComponent(JSON.stringify(data))
+    }).appendTo('body').click(function() {
+        console.info("clicked!");
+        $(this).remove()
+    })[0].click()
+}
+
+
 function initEmbeddedBlock(element, callback) {
     var $elem = $(element),
         $viewer,
@@ -94,7 +107,7 @@ function initEmbeddedBlock(element, callback) {
 
     id = element.dataset.stixGistId;
     url = element.dataset.stixUrl;
-    allowDragDrop = isTrue(element.dataset.allowDragdrop)
+    allowDragDrop = isTrue(element.dataset.stixAllowDragdrop)
 
     file = element.dataset.gistFile;
     caption = element.dataset.caption;
@@ -132,13 +145,13 @@ function initEmbeddedBlock(element, callback) {
         $elem.prepend(tmpl({'caption': caption}));
     }
     if (!hideFooter) {
-        let tmpl = _.template(`
+        //$elem.append(tmpl({'url': id ? ('https://api.github.com/gists/' + id) : url}))
+        $elem.append(`
             <div class='viewer-footer'>
-            made with <a href="https://github.com/traut/stixviewer">stixviewer</a>
-            <a href="<%= url %>" class="download" style="float:right">STIX2 bundle</a>
+                made with <a href="https://github.com/traut/stixview">stixview</a>
+                <a href="#" class="download" style="float:right">STIX2 bundle</a>
             </div>
         `);
-        $elem.append(tmpl({'url': id ? ('https://api.github.com/gists/' + id) : url}))
     }
 
     if (!id && !url && !allowDragDrop) {
@@ -149,6 +162,10 @@ function initEmbeddedBlock(element, callback) {
         $graph.html("<div class='viewer-placeholder'>Drag and drop STIX2 json file here</div>");
         initDragDrop(element, function(bundle) {
             $graph.find('.viewer-placeholder').remove();
+            $elem.find(".download").on('click', function(e) {
+                e.preventDefault();
+                downloadData(bundle);
+            });
             callback(bundle);
         });
     }
@@ -161,8 +178,9 @@ function initEmbeddedBlock(element, callback) {
     if (id) {
         loadGist(id, file)
             .then(
-                function(bundle) {
+                function({bundle, url}) {
                     callback(bundle);
+                    $elem.find(".download").prop('href', url);
                 },
                 function(error){
                     console.error("can not load gist " + id, error);
@@ -172,6 +190,7 @@ function initEmbeddedBlock(element, callback) {
             .then(
                 function(bundle) {
                     callback(bundle);
+                    $elem.find(".download").prop('href', url);
                 },
                 function(error){
                     console.error("can not load url " + url, error);

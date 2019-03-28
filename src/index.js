@@ -19,7 +19,7 @@ function isTrue(prop) {
 
 
 function initEmbeddedGraph(element) {
-    element.dataset.stixViewerId = Math.random().toString(16).slice(2);
+    element.dataset.stixViewId = Math.random().toString(16).slice(2);
 
     initEmbeddedBlock(element, function(bundle) {
         let layout = element.dataset.graphLayout;
@@ -29,10 +29,15 @@ function initEmbeddedGraph(element) {
         let disableMouseZoom = isTrue(element.dataset.disableMouseZoom);
         let disablePanning = isTrue(element.dataset.disablePanning);
         let disableLabels = isTrue(element.dataset.disableLabels);
+        let showMarkings = isTrue(element.dataset.showMarkings);
 
         let highlightedObjects = (
             element.dataset.highlightedObjects ? 
             element.dataset.highlightedObjects.split(',') : []);
+
+        let hiddenObjects = (
+            element.dataset.hiddenObjects ?
+            element.dataset.hiddenObjects.split(',') : []);
 
         let minZoom = element.dataset.minZoom;
         let maxZoom = element.dataset.maxZoom;
@@ -45,6 +50,8 @@ function initEmbeddedGraph(element) {
             disablePanning: disablePanning,
             disableLabels: disableLabels,
             highlightedObjects: highlightedObjects,
+            hiddenObjects: hiddenObjects,
+            showMarkings: showMarkings,
             minZoom: minZoom,
             maxZoom: maxZoom,
         }, function() {
@@ -57,12 +64,6 @@ function initEmbeddedGraph(element) {
 
 $(function() {
     // find all elements containing "data-stix-gist-id" attribute.
-    $('[data-stix-gist-id],[data-stix-url],[data-allow-dragdrop]').each(
+    $('[data-stix-gist-id],[data-stix-url],[data-stix-allow-dragdrop]').each(
         function(i, el) { initEmbeddedGraph(el) });
 });
-
-
-//document.addEventListener("DOMContentLoaded", function() {
-//	console.info("what")
-//});
-

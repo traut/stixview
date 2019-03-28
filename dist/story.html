@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Writing a report with STIX2 graph, step by step - stixview</title>
+    <style type="text/css">
+        body {
+            font-family: sans-serif;
+            padding-left: 20px;
+            width: 800px;
+            line-height: 1.7em;
+        }
+    </style>
+</head>
+<body>
+
+<h3>Writing a report with STIX2 graph, step by step.</h3>
+<p>
+Let's take a simple example. Imagine we are writing a report about <a href="https://blog.yoroi.company/research/the-enigmatic-roma225-campaign/">the Roma225 campaign</a> from December 2018.
+</p>
+<p>
+First, we create the campaign and targeted victim objects. The campaign object has a description and is well labeled (you can open the object details by clicking on the object icon):
+<div data-stix-gist-id="6a0fbb0f6e7faf063c748b23f9c7dc62"
+     data-highlighted-objects="campaign--29cca252-e0e5-55ed-90f6-847ad0f4ce14,identity--ef97960a-a76e-5009-91d4-a11bfcddd4c0"
+     data-show-sidebar=true
+     data-disable-mouse-zoom=true
+     data-graph-width=500
+     data-graph-height=300>
+</div>
+</p>
+
+<p>
+We've identified attack patterns relevant to this campaign, so we can add these as objects, too:
+<div data-stix-gist-id="6a0fbb0f6e7faf063c748b23f9c7dc62"
+     data-highlighted-objects="campaign--29cca252-e0e5-55ed-90f6-847ad0f4ce14,attack-pattern--a3bfb553-ee1d-53e8-9dc7-b0ebf12bdc5f,attack-pattern--e1a3c8e6-8880-5001-938c-45f05978900b,identity--ef97960a-a76e-5009-91d4-a11bfcddd4c0"
+     data-show-sidebar=true
+     data-disable-mouse-zoom=true
+     data-graph-height=400>
+</div>
+</p>
+
+<p>
+It is very useful to attach new information to existing intelligence. We can do this by using library objects. In this example, we reference to MITRE ATT&CK techniques <a href="https://attack.mitre.org/techniques/T1112/">T1112</a>, <a href="https://attack.mitre.org/techniques/T1060/">T1060</a>, <a href="https://attack.mitre.org/techniques/T1170/">T1170</a>, and <a href="https://attack.mitre.org/techniques/T1346/">T1346/PRE-T1123</a>, represented as attack pattern objects.
+<div data-stix-gist-id="6a0fbb0f6e7faf063c748b23f9c7dc62"
+     data-highlighted-objects="campaign--29cca252-e0e5-55ed-90f6-847ad0f4ce14,attack-pattern--a3bfb553-ee1d-53e8-9dc7-b0ebf12bdc5f,attack-pattern--a298e1a5-1f98-51af-b4c9-aebe23bb246d,attack-pattern--07f560c1-ef9f-56cb-9682-ba3985e0a260,attack-pattern--e1a3c8e6-8880-5001-938c-45f05978900b,attack-pattern--6ecf2333-f55c-51dd-b5c8-0b678b65ffeb,identity--ef97960a-a76e-5009-91d4-a11bfcddd4c0,attack-pattern--6ed91203-7f3a-57db-a115-e2ebc5ca1943"
+     data-show-sidebar=true
+     data-disable-mouse-zoom=true
+     data-graph-layout="klay"
+     data-graph-height=400>
+</div>
+</p>
+<p>
+It is time to add relevant indicators to the graph:
+<div data-stix-gist-id="6a0fbb0f6e7faf063c748b23f9c7dc62"
+     data-hidden-objects="x-eclecticiq-gthesis--38b61755-62f8-440f-97fc-613d04ce8a87,x-eclecticiq-hypothesis--f26abb1d-1fc9-488a-97da-cfd45b7717a0,identity--f431f809-377b-45e0-aa1c-6a4751cae5ff,report--5c3873b2-709e-42be-8da5-9b09da0f7236,indicator--46142e30-38e6-5c0e-b2e4-ffcfbc443426,malware--46142e30-38e6-5c0e-b2e4-ffcfbc443426"
+     data-show-sidebar=true
+     data-graph-layout="cola"
+     data-graph-height=600>
+</div>
+</p>
+<p>
+Now we are ready to formulate our gtheses.
+</p>
+<p>
+We are going to use ACH (<a href="https://www.cia.gov/library/center-for-the-study-of-intelligence/csi-publications/books-and-monographs/psychology-of-intelligence-analysis/art11.html">Analysis of Competing gthesis</a>) approach by adding 2 mutually exclusive hypothesis objects (custom STIX2 objects with type <i>x-eclecticiq-hypothesis</i>), one named "Gorgon Group is associated with Roma225 Campaign" and another "Gorgon Group is not associated with Roma225 Campaign". These objects are linked to evidence entities that support them by relationships with a custom type <i>x-evidence-of</i>.
+<div data-stix-gist-id="6a0fbb0f6e7faf063c748b23f9c7dc62"
+     data-hidden-objects="report--5c3873b2-709e-42be-8da5-9b09da0f7236,indicator--46142e30-38e6-5c0e-b2e4-ffcfbc443426,malware--46142e30-38e6-5c0e-b2e4-ffcfbc443426,identity--f431f809-377b-45e0-aa1c-6a4751cae5ff"
+     data-show-sidebar=true
+     data-graph-layout="cola"
+     data-graph-height=600>
+</div>
+</p>
+<p>
+Finally, we evaluate our hypotheses and write a report
+<div data-stix-gist-id="6a0fbb0f6e7faf063c748b23f9c7dc62"
+     data-hidden-objects="identity--f431f809-377b-45e0-aa1c-6a4751cae5ff"
+     data-show-sidebar=true
+     data-graph-layout="cola"
+     data-graph-height=600>
+</div>
+</p>
+<p>
+To tidy things up, we add the author's Identity object and TLP Marking Definition object. Our STIX2 graph is ready:
+<div data-stix-gist-id="6a0fbb0f6e7faf063c748b23f9c7dc62"
+     data-show-sidebar=true
+     data-graph-layout="cola"
+     data-show-markings=true
+     data-graph-width=1000
+     data-graph-height=1000>
+</div>
+</p>
+
+<p><i>Acknowledgements: Original report and <a href="https://gist.github.com/CaitlinHuey/6a0fbb0f6e7faf063c748b23f9c7dc62">STIX2 bundle</a> were created by <a href="https://www.linkedin.com/in/caitlin-h-7729147b/">Caitlin Huey</a>.</i></p>
+
+<script type="text/javascript" src="stixview.bundle.js"></script></body>
+</html>

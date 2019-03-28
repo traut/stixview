@@ -11,6 +11,24 @@ import dagre from 'cytoscape-dagre';
 
 import autopanOnDrag from 'cytoscape-autopan-on-drag';
 
+import attackPatternIcon from '../icons/attack-pattern.svg';
+import campaignIcon from '../icons/campaign.svg';
+import courseOfActionIcon from '../icons/course-of-action.svg';
+import identityIcon from '../icons/identity.svg';
+import indicatorIcon from '../icons/indicator.svg';
+import intrusionSetIcon from '../icons/intrusion-set.svg';
+import malwareIcon from '../icons/malware.svg';
+import observedDataIcon from '../icons/observed-data.svg';
+import opinionIcon from '../icons/opinion.svg';
+import relationshipIcon from '../icons/relationship.svg';
+import reportIcon from '../icons/report.svg';
+import sightingIcon from '../icons/sighting.svg';
+import threatActorIcon from '../icons/threat-actor.svg';
+import toolIcon from '../icons/tool.svg';
+import vulnerabilityIcon from '../icons/vulnerability.svg';
+
+import hypothesisIcon from '../icons/x-eclecticiq-hypothesis.svg';
+
 
 cytoscape.use(klay);
 cytoscape.use(euler);
@@ -52,57 +70,57 @@ const iconPerType = {
     'threat-actor': {
         color: '#d32b49',
         shape: 'ellipse',
-        image: 'icons/threat-actor.svg',
+        image: threatActorIcon,
     },
     tool: {
         color: '#6661ab',
         shape: 'star',
-        image: 'icons/tool.svg',
+        image: toolIcon,
     },
     vulnerability: {
         color: '#eaca6b',
         shape: 'diamond',
-        image: 'icons/vulnerability.svg',
+        image: vulnerabilityIcon,
     },
     malware: {
         color: '#6661ab',
         shape: 'ellipse',
-        image: 'icons/malware.svg',
+        image: malwareIcon,
     },
     'intrusion-set': {
         color: '#396eb6',
         shape: 'ellipse',
-        image: 'icons/intrusion-set.svg',
+        image: intrusionSetIcon,
     },
     indicator: {
         color: '#e38850',
         shape: 'pentagon',
-        image: 'icons/indicator.svg',
+        image: indicatorIcon,
     },
     'attack-pattern': {
         color: '#6661ab',
         shape: 'diamond',
-        image: 'icons/attack-pattern.svg',
+        image: attackPatternIcon,
     },
     'course-of-action': {
         color: '#7fbe82',
         shape: 'ellipse',
-        image: 'icons/course-of-action.svg',
+        image: courseOfActionIcon,
     },
     campaign: {
         color: '#1d6775',
         shape: 'star',
-        image: 'icons/campaign.svg',
+        image: campaignIcon,
     },
     report: {
         color: '#2d2b5f',
         shape: 'ellipse',
-        image: 'icons/report.svg',
+        image: reportIcon,
     },
     identity: {
         color: '#9c9d9d',
         shape: 'diamond',
-        image: 'icons/identity.svg',
+        image: identityIcon,
     },
     'marking-definition': {
         color: '#72d1fb',
@@ -111,31 +129,31 @@ const iconPerType = {
     sighting: {
         color: '#383839',
         shape: 'ellipse',
-        image: 'icons/sighting.svg',
+        image: sightingIcon,
     },
     'observed-data': {
         color: '#AB558C',
         shape: 'ellipse',
-        image: 'icons/observed-data.svg',
+        image: observedDataIcon,
     },
     relationship: {
         color: '#31A9C1',
         shape: 'ellipse',
-        image: 'icons/relationship.svg',
+        image: relationshipIcon,
     },
 
     // stix2.1
     opinion: {
         color: '#881177',
         shape: 'ellipse',
-        image: 'icons/opinion.svg',
+        image: opinionIcon,
     },
 
     // custom
     'x-eclecticiq-hypothesis': {
         color: '#009688',
         shape: 'ellipse',
-        image: 'icons/x-eclecticiq-hypothesis.svg',
+        image: hypothesisIcon,
     },
 
     // placeholder node
@@ -170,7 +188,6 @@ const DEFAULT_GRAPH_STYLE = [
             'background-width': '80%',
             'background-height': '80%',
             'background-position-x': '50%',
-            //'background-color': '#ea8a31',
             'background-image': 'data(image)',
             'text-valign': 'bottom',
             'text-halign': 'center',
@@ -213,6 +230,13 @@ const DEFAULT_GRAPH_STYLE = [
             width: NODE_WIDTH / 2,
             height: NODE_HEIGHT / 2,
             'font-size': '8pt',
+        }
+    },
+    {
+        selector: 'node[type="marking-definition"]',
+        style: {
+            width: NODE_WIDTH / 2,
+            height: NODE_HEIGHT / 2,
         }
     },
     {
@@ -284,11 +308,9 @@ const DEFAULT_GRAPH_STYLE = [
 
 function makeNodeElement(obj) {
     var icon = iconPerType[obj.type];
-
     if (obj.type === 'marking-definition') {
         icon.color = TLP_HEX_COLORS[obj.definition.tlp];
     }
-
     return {
         group: 'nodes',
         data: {
@@ -302,7 +324,7 @@ function makeNodeElement(obj) {
         },
         selectable: true,
         grabbable: true,
-        classes: [obj.type],
+        classes: [obj.type, 'icon-' + obj.type],
     }
 }
 
@@ -395,21 +417,11 @@ function makeRelationshipNode(existingEdge) {
 
 function showNodeDetails($sidebar, stixId, node) {
     let entity = node._raw;
-
-//    if (sidebarNode == node) {
-//        closeSidebar();
-//        return;
-//    } else {
-//        if (sidebarNode) {
-//            //deselectNode(sidebarNode);
-//        }
-//    }
-//    sidebarNode = node;
     var tmpl = _.template(`
         <img class='sidebar-type-icon'
-             src='icons/<%= obj.type %>.svg'
+             src='<%= icon.image %>'
              onerror="this.style.display='none'"/><%= obj.type %><span class='sidebar-close-icon'>×</span>
-        <h2><%- (obj.name || (
+        <h2 class='sidebar-title'><%- (obj.name || (
             obj.definition_type == 'tlp' ?
                 (obj.definition_type + ': ' + obj.definition.tlp)
                 : obj.definition_type)) %></h2>
@@ -425,7 +437,10 @@ function showNodeDetails($sidebar, stixId, node) {
             <textarea class='sidebar-textarea' readonly='yes'><%- JSON.stringify(obj, null, 4) %></textarea>
         </p>
     `);
-    $sidebar.html(tmpl({obj: entity, elId: stixId}));
+    $sidebar.html(tmpl({
+        obj: entity,
+        elId: stixId,
+        icon: iconPerType[entity.type]}));
     $sidebar.find('.sidebar-close-icon').on('click', function() {
         $sidebar.css('display', 'none');
     });
@@ -674,7 +689,7 @@ function populateIdrefEdge(nodesMap, edgesMap, edge) {
     }
 };
 
-function makeElements(bundle, showIdrefs, highlighted) {
+function makeElements(bundle, showIdrefs, highlighted, hidden, showMarkings) {
     let nodes = [];
     let nodesMap = {};
     _.forEach(bundle.objects, function (obj) {
@@ -682,9 +697,13 @@ function makeElements(bundle, showIdrefs, highlighted) {
             return
         }
         let node = makeNodeElement(obj);
-        if (highlighted.length > 0 && highlighted.indexOf(node.data.id) == -1) {
+        if ((highlighted.length > 0 && highlighted.indexOf(node.data.id) == -1)
+            || (hidden.length > 0 && hidden.indexOf(node.data.id) > -1)) {
             // skip
             return;
+        }
+        if (!showMarkings && obj.type === 'marking-definition') {
+            return
         }
         nodes.push(node)
         nodesMap[node.data.id] = node;
@@ -697,9 +716,12 @@ function makeElements(bundle, showIdrefs, highlighted) {
             return
         }
         let edge = makeEdgeElement(obj);
-        if (highlighted.length > 0
+        if ((highlighted.length > 0
                 && (highlighted.indexOf(edge.data.source) == -1
-                    || highlighted.indexOf(edge.data.target) == -1)) {
+                    || highlighted.indexOf(edge.data.target) == -1))
+            || (hidden.length > 0
+                && (hidden.indexOf(edge.data.source) > -1
+                    || highlighted.indexOf(edge.data.target) > -1))) {
             // skip
             return;
         }
@@ -752,11 +774,13 @@ function initGraph(element, bundle, options, callback) {
         disablePanning,
         disableLabels,
         highlightedObjects,
+        hiddenObjects,
+        showMarkings,
         minZoom,
         maxZoom,
     } = options;
 
-    let stixId = element.dataset.stixViewerId;
+    let stixId = element.dataset.stixViewId;
     let cy = cache[stixId];
     let viewer = $(element).find(".stix-viewer");
     let graph = $(element).find(".stix-graph");
@@ -765,7 +789,7 @@ function initGraph(element, bundle, options, callback) {
         cy.remove("node");
         cy.remove("edge");
     } else {
-        cy = cache[element.dataset.stixViewerId] = cytoscape({
+        cy = cache[element.dataset.stixViewId] = cytoscape({
             container: graph,
             style: DEFAULT_GRAPH_STYLE,
             layout: layout,
@@ -781,12 +805,12 @@ function initGraph(element, bundle, options, callback) {
 //            if (!element.hidden) {
 //                if (cy.headless()) {
 //                    cy.mount();
-//                    console.info("mounted", cy.headless(), element.dataset.stixViewerId);
+//                    console.info("mounted", cy.headless(), element.dataset.stixViewId);
 //                }
 //            } else {
 //                if (!cy.headless()) {
 //                    cy.unmount();
-//                    console.info("unmounted", cy.headless(), element.dataset.stixViewerId);
+//                    console.info("unmounted", cy.headless(), element.dataset.stixViewId);
 //                }
 //            }
 //        }, 1000);
@@ -795,7 +819,8 @@ function initGraph(element, bundle, options, callback) {
         //configureKeyboardListener(cy);
         //configureButtonListeners(cy);
     }
-    let graphElements = makeElements(bundle, showIdrefs, highlightedObjects);
+    let graphElements = makeElements(
+        bundle, showIdrefs, highlightedObjects, hiddenObjects, showMarkings);
 
     cy.add(graphElements);
     cy.raw_data = bundle;

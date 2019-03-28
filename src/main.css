@@ -20,6 +20,7 @@
     border-color: #ddd;
 
     background-color: #f7f7f7; 
+    line-height: 1.2em;
 }
 
 .stix-viewer-block .stix-viewer .stix-graph {
@@ -38,6 +39,7 @@
     border-color: #ddd;
     background-color: #f7f7f7; 
     color: #586069;
+    line-height: 1.2em;
 }
 
 .stix-viewer-block .viewer-header a {
@@ -78,6 +80,10 @@
      */
     border-color: #ddd;
     background-color: #f7f7f7;
+}
+
+.sidebar .sidebar-title {
+    word-wrap: break-word;
 }
 
 .sidebar-close-icon {
