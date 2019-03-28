@@ -18,8 +18,7 @@
     "security"
   ],
   "scripts": {
-    "build": "parcel-bundler build src/index.js",
-    "dev": "parcel-bundle src/index.js",
+    "build": "npx webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bugs": {
