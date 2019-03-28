@@ -64,15 +64,15 @@ stixview supports these `data-` attributes:
 
 `show-sidebar` (`false` by default) — enable a sidebar with object details, opened when object is clicked on.
 
-`show-idrefs` (`false` by default)– show placeholder objects for ids mentioned in the relationships but not present in a bundle.
+`show-idrefs` (`false` by default) — show placeholder objects for ids mentioned in the relationships but not present in a bundle.
 
-`graph-layout` (`cola` by default)— name of the graph layout algorythm. Supported algorythms are `cola` , `klay`, `cose-bilkent`, `dagre`.
+`graph-layout` (`cola` by default) — name of the graph layout algorythm. Supported algorythms are `cola` , `klay`, `cose-bilkent`, `dagre`.
 
 `disable-mouse-zoom` (`false` by default) — disable mouse wheel zoom.
 
 `disable-panning` (`false` by default) — disable panning in the graph, making graph view fixed. Users will still be able to drag nodes around.
 
-`disable-labels` (`false` by default) – disable node labels.
+`disable-labels` (`false` by default) — disable node labels.
 
 `show-markings` (`false` by default) — render `marking-definition` objects. These objects are usually heavily connected, so skipping them improves graph readability.
 
