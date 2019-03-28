@@ -145,7 +145,6 @@ function initEmbeddedBlock(element, callback) {
         $elem.prepend(tmpl({'caption': caption}));
     }
     if (!hideFooter) {
-        //$elem.append(tmpl({'url': id ? ('https://api.github.com/gists/' + id) : url}))
         $elem.append(`
             <div class='viewer-footer'>
                 made with <a href="https://github.com/traut/stixview">stixview</a>

@@ -1,8 +1,3 @@
-/*
- * author: Sergey Polzunov
- * https://github.com/traut/stix2-viewer
- * version 0.0.1
- */
 import $ from 'jquery';
 
 import * as viewer from './viewer';
@@ -63,7 +58,6 @@ function initEmbeddedGraph(element) {
 
 
 $(function() {
-    // find all elements containing "data-stix-gist-id" attribute.
     $('[data-stix-gist-id],[data-stix-url],[data-stix-allow-dragdrop]').each(
         function(i, el) { initEmbeddedGraph(el) });
 });
