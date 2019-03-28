@@ -25,7 +25,7 @@ To see stixview in action, take a look at these demo pages:
 Usage
 -----
 
-To use stixview in a browser, you can download the latest build from `dist` directory (all js and svg files) and reference `stixview.bundle.js` it in your HTML file:
+To use stixview in a browser, you can download the latest build from `dist` directory (`stixview.bundle.js`) and reference it from your HTML file:
 
 ```html
 <script src="stixview.bundle.js" type="text/javascript"></script>
@@ -67,8 +67,6 @@ stixview supports these `data-` attributes:
 `show-idrefs` (`false` by default)– show placeholder objects for ids mentioned in the relationships but not present in a bundle.
 
 `graph-layout` (`cola` by default)— name of the graph layout algorythm. Supported algorythms are `cola` , `klay`, `cose-bilkent`, `dagre`.
-
-`caption`
 
 `disable-mouse-zoom` (`false` by default) — disable mouse wheel zoom.
 

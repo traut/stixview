@@ -147,7 +147,7 @@ function initEmbeddedBlock(element, callback) {
     if (!hideFooter) {
         $elem.append(`
             <div class='viewer-footer'>
-                made with <a href="https://github.com/traut/stixview">stixview</a>
+                made with <a href="https://traut.github.io/stixview/">stixview</a>
                 <a href="#" class="download" style="float:right">STIX2 bundle</a>
             </div>
         `);
