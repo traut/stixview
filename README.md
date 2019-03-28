@@ -8,7 +8,7 @@ Motivation
 
 CTI (Cyber Threat Intelligence) is very much about telling stories. Information becomes intelligence when it is complimented with a context and is placed in a story. These stories are usually crystallised in the reports by an intelligence provider and disseminated to the customers.
 
-If intelligence provider cares about structured machine-readable CTI, the reports produced will be supplemented with STIX2 bundles. There is a gap there between a story, narrated in a report, and a structured CTI snapshot, represented by a STIX2 bundle.
+If intelligence provider cares about structured machine-readable CTI, the reports produced will be supplemented with <a href="https://github.com/traut/stixview">STIX2</a> bundles. There is a gap there between a story, narrated in a report, and a structured CTI snapshot, represented by a STIX2 bundle.
 
 The objective of [stixview](https://github.com/traut/stixview) library is to provide easily embeddable STIX2 graphs with necessary level of interactivity, so CTI community can create informative and engaging stories.
 
