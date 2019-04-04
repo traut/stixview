@@ -1,5 +1,6 @@
 .stix-viewer-block {
     display: block;
+    overflow: auto;
     position: relative;
     font-size: 0.8em;
     margin: 10px 0px;
@@ -52,6 +53,7 @@
     padding-left: 30%;
     font-size: 2em;
     color: #afafaf;
+    font-weight: normal;
 }
 
 .dragover-active {
@@ -76,6 +78,7 @@
     border-style: solid;
     border-color: #ddd;
     background-color: #f7f7f7;
+    line-height: 1.4em;
 }
 
 .sidebar .sidebar-title {

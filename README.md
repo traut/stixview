@@ -17,8 +17,9 @@ Demos
 -----
 
 To see stixview in action, take a look at these demo pages:
-* [writing a report with STIX2 graph, step by step](https://traut.github.io/stixview/dist/demos/story.html)
-* [drag-n-drop graph example](https://traut.github.io/stixview/dist/demos/drag-n-drop.html)
+* [multiple graphs per page, rendering selected entities from the same STIX bundle](https://traut.github.io/stixview/dist/demos/story.html)
+* [graph viewer with custom buttons](https://traut.github.io/stixview/dist/demos/viewer.html)
+* [drag-n-drop example](https://traut.github.io/stixview/dist/demos/drag-n-drop.html)
 * [misc](https://traut.github.io/stixview/dist/demos/misc.html)
 
 
@@ -58,7 +59,7 @@ stixview supports these `data-` attributes:
 
 `stix-allow-dragdrop` (`false` by default) — enable ability to drag-n-drop STIX2 bundle into the graph element. If this property is set to `true` and `stix-gist-id` and `stix-url` are not specified, empty graph will be rendered.
 
-`caption` — a title of the graph.
+`caption` — a title of the graph. Header is not shown if `caption` is not set.
 
 `hide-footer` (`false` by default) — hide graph footer with a download link to STIX2 bundle.
 
@@ -66,7 +67,7 @@ stixview supports these `data-` attributes:
 
 `show-idrefs` (`false` by default) — show placeholder objects for ids mentioned in the relationships but not present in a bundle.
 
-`graph-layout` (`cola` by default) — name of the graph layout algorythm. Supported algorythms are `cola` , `klay`, `cose-bilkent`, `dagre`.
+`graph-layout` (`cola` by default) — name of the graph layout algorythm. Supported algorythms are `cola` , `klay`, `cose-bilkent`, and `dagre`.
 
 `disable-mouse-zoom` (`false` by default) — disable mouse wheel zoom.
 
@@ -87,3 +88,41 @@ stixview supports these `data-` attributes:
 `graph-width` (all available width by default) — width of a graph element. Both pixel and % values are supported (see misc demo page for an example).
 
 `graph-height` (`600` pixels by default) — height of a graph element. Both pixel and % values are supported (see misc demo page for an example).
+
+
+The library, when used in a browser, will register `stixview` variable on `window` object with properties:
+
+`graphs` — a registry of graphs initiated on a page.
+
+`onInit(selector, callback)` – listener hook for graph's init event on a DOM element that matches provided `selector` value (see [demo](https://traut.github.io/stixview/dist/demos/viewer.html) for usage example). Callback receive instance of a graph interface.
+
+`onLoad(selector, callback)` – listener hook for graph's load event on a DOM element that matches provided `selector` value (see [demo](https://traut.github.io/stixview/dist/demos/viewer.html) for usage example). Callback receive instance of a graph interface.
+
+
+Graph interface is an object with properties:
+
+`cy` – [cytoscape.js](http://js.cytoscape.org) graph object.
+
+`element` — DOM element that holds a graph.
+
+`options` – configured graph options.
+
+`runLayout(name)` — run specific layout on a graph.
+
+`enableLabels()` — enable labels in a graph.
+
+`disableLabels()` — disable labels in a graph.
+
+`fit()` — fit graph fully into a graph view.
+
+`showIdrefs(callback)` — show idref placeholders on a graph. This will trigger layout recalculation. Callback is triggered when layout algorithm finishes.
+
+`hideIdrefs(callback)` — hide idref placeholders on a graph. This will trigger layout recalculation. Callback is triggered when layout algorithm finishes.
+
+`loadData(data)` — load STIX2 bundle from `data` JSON object and render on a graph.
+
+`loadDataFromFile(file)` — load STIX2 bundle from `file` file object and render on a graph.
+
+`loadDataFromUrl(url)` — load STIX2 bundle from remote URL and render on a graph.
+
+`loadDataFromParamUrl(paramName)` — load STIX2 bundle from remote URL, configured in HTTP GET paramter with name in `paramName` and render on a graph.

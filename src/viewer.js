@@ -29,6 +29,10 @@ const vulnerabilityIcon = require('!svg-inline-loader?removeSVGTagAttrs=false!..
 
 const hypothesisIcon = require('!svg-inline-loader?removeSVGTagAttrs=false!../icons/x-eclecticiq-hypothesis.svg');
 
+
+import { isTrue, loadUrl, loadGist } from './utils.js';
+
+
 cytoscape.use(klay);
 cytoscape.use(euler);
 cytoscape.use(coseBilkent);
@@ -450,15 +454,32 @@ function showNodeDetails($sidebar, stixId, node) {
     $sidebar.css('display', 'block');
 }
 
-function initSidebar(parentEl, stixId, cy) {
-    $(parentEl).append("<div class='sidebar'></div>")
-    let $sidebar = $(parentEl).find('.sidebar');
-
+function initSidebar(cy, stixId) {
     cy.nodes().on('click', function(e){
         e.preventDefault();
         let clickedNode = e.target.data();
-        showNodeDetails($sidebar, stixId, clickedNode);
+        showNodeDetails(cy.sidebar, stixId, clickedNode);
     });
+}
+
+
+function downloadData(data) {
+    $('<a />', {
+        'download': data['id'] + '.json',
+        'href' : 'data:application/json,' + encodeURIComponent(JSON.stringify(data, null, 4))
+    }).appendTo('body').click(function() {
+        $(this).remove()
+    })[0].click()
+}
+
+
+function initDownloadLink(element, bundle) {
+    let $elem = $(element).find(".download");
+	$elem.off('click');
+	$elem.on('click', function(e) {
+		e.preventDefault();
+		downloadData(bundle);
+	});
 }
 
 
@@ -540,23 +561,18 @@ function configureKeyboardListener(cy) {
 }
 
 
-function loadFileFromParams() {
-    var url = new URL(window.location.href);
-    var remoteBundle = url.searchParams.get('bundle');
-    if (remoteBundle) {
-        loadRemoteFile(remoteBundle);
-    }
+function loadRemoteFile(url, callback) {
+    $.get(url, function(response) {
+        callback(response)
+    });
 }
 
-function readAndParseFile(file) {
-    if (file.type == 'application/json') {
-        var reader = new FileReader();
-        reader.onload = function(e2) {
-            var data = JSON.parse(e2.target.result);
-            currentRawDataset = data;
-            initOrReloadGraph(data);
-        }
-        reader.readAsText(file); // start reading the file data.
+
+function loadFileFromParam(paramName, callback) {
+    var url = new URL(window.location.href);
+    var remoteBundle = url.searchParams.get(paramName);
+    if (remoteBundle) {
+        loadRemoteFile(remoteBundle, callback);
     }
 }
 
@@ -570,68 +586,7 @@ function runLayout(cy, layoutName) {
     setTimeout(function() {
         layout.stop();
     }, 300);
-}
-
-
-function configureButtonListeners(cy) {
-    document
-        .getElementById('layout-select')
-        .addEventListener('change', function(e) {
-            runLayout(e.target.value);
-        });
-
-    let showLabels = false;
-
-    document
-        .getElementById('toggle-labels')
-        .addEventListener('click', function() {
-            showLabels = !showLabels;
-            if (showLabels) {
-                cy.style().selector('node').style('label', 'data(label)').update();
-            } else {
-                cy.style().selector('node').style('label', '').update();
-            }
-            var toggleLabelsEl = document.getElementById('toggle-labels');
-            if (showLabels) {
-                toggleLabelsEl.innerText = 'Disable labels';
-            } else {
-                toggleLabelsEl.innerText = 'Enable labels';
-            }
-        });
-
-    document.getElementById('fit-graph').addEventListener('click', function(e) {
-        e.preventDefault();
-        cy.fit();
-    });
-
-    document.getElementById('toggle-idrefs').addEventListener('click', function(e) {
-        document.getElementById('toggle-idrefs').disabled = true;
-        e.preventDefault();
-        setTimeout(function() {
-            showIdrefs = !showIdrefs;
-            initOrReloadGraph(window.cy.raw_data)
-            document.getElementById('toggle-idrefs').disabled = false;
-        }, 50);
-    });
-
-}
-
-function configureFileInput() {
-	function handleFileSelect(evt) {
-		var files = evt.target.files; // FileList object
-		if (files.length > 1) {
-			console.error("More than 1 file dropped, picking first one")
-		};
-		if (files.lengh == 0) {
-			return
-		}
-		var file = files[0];
-		readAndParseFile(file);
-	}
-
-	document
-		.getElementById(FILE_INPUT_ID)
-		.addEventListener('change', handleFileSelect, false);
+    cy.layoutName = layoutName;
 }
 
 
@@ -768,76 +723,292 @@ function makeElements(bundle, showIdrefs, highlighted, hidden, showMarkings) {
 
 let cache = {};
 
-function initGraph(element, bundle, options, callback) {
+
+function initWrapper(element, options) {
+
+    const { caption, width, height, hideFooter } = options;
+
+    let $elem = $(element);
+    $elem.addClass('stix-viewer-block')
+    $elem.append('<div class="stix-viewer"></div>')
+
+    let $viewer = $elem.find(".stix-viewer")
+    $viewer.append('<div class="stix-graph"></div>')
+
+    let $graph = $viewer.find(".stix-graph")
+
+    $elem.css({width: width});
+    $graph.css({
+        width: '100%',
+        height: height
+    });
+
+    if (caption) {
+        let tmpl = _.template(`
+            <div class="viewer-header"><%= caption %></div>
+        `);
+        $elem.prepend(tmpl({'caption': caption}));
+    }
+    if (!hideFooter) {
+        $elem.append(`
+            <div class='viewer-footer'>
+                made with <a href="https://traut.github.io/stixview/">stixview</a>
+                <a href="#" class="download" style="float:right">↓STIX2 bundle</a>
+            </div>
+        `);
+    }
+}
+
+
+function readFile(file, callback) {
+    if (file.type == 'application/json') {
+        var reader = new FileReader();
+        reader.onload = function(e2) {
+            var data = JSON.parse(e2.target.result);
+            callback(data);
+        }
+        reader.readAsText(file); // start reading the file data.
+    }
+}
+
+
+function initDragDrop(elem, callback) {
+    elem.addEventListener('dragover', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        $(elem).addClass("dragover-active");
+        e.dataTransfer.dropEffect = 'copy';
+    });
+    elem.addEventListener('dragleave', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        $(elem).removeClass("dragover-active");
+    });
+    elem.addEventListener('drop', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        $(elem).removeClass("dragover-active");
+        var files = e.dataTransfer.files; // Array of all files
+        if (files.length > 1) {
+            console.error("More than 1 file dropped, picking first one", files)
+        };
+        if (files.lengh == 0) {
+            return
+        }
+        var file = files[0];
+        readFile(file, callback);
+    });
+}
+
+
+function fetchData($elem, gistId, file, url, callback) {
+    if (gistId) {
+        loadGist(gistId, file)
+            .then(
+                function({bundle, url}) {
+                    $elem.removeClass("loading");
+                    callback(bundle);
+                },
+                function(error){
+                    console.error("can not load gist " + gistId, error);
+                });
+    } else if (url) {
+        loadUrl(url)
+            .then(
+                function(bundle) {
+                    $elem.removeClass("loading");
+                    callback(bundle);
+                },
+                function(error){
+                    console.error("can not load url " + url, error);
+                });
+    }
+}
+
+
+function initGraph(element, options, dataFetchCallback, loadCallback) {
     const {
+        gistId,
+        gistFile,
+        url,
+        allowDragDrop,
+        caption,
         layout,
-        showIdrefs,
         showSidebar,
+        showIdrefs,
         disableMouseZoom,
         disablePanning,
         disableLabels,
         highlightedObjects,
         hiddenObjects,
+        hideFooter,
         showMarkings,
         minZoom,
         maxZoom,
+        graphWidth,
+        graphHeight
     } = options;
 
+    let $elem = $(element);
+
+    if (!gistId && !url && !allowDragDrop) {
+        return false;
+    }
+    let width = graphWidth || element.clientWidth || 800;
+    let height = graphHeight || 600;
+
+    initWrapper(element, {width, height, caption, hideFooter})
+
+    let $viewer = $elem.find(".stix-viewer")
+    let $graph = $viewer.find(".stix-graph")
+
+    if (allowDragDrop) {
+        $graph.html(`
+            <div class='viewer-placeholder'>
+            Drag and drop STIX2 json file here
+            </div>`);
+        initDragDrop(element, function(bundle) {
+            dataFetchCallback(bundle);
+        });
+    }
+
+    if (gistId || url) {
+        $elem.addClass("loading");
+        $elem.find('.viewer-placeholder').remove();
+    }
+
     let stixId = element.dataset.stixViewId;
-    let cy = cache[stixId];
     let viewer = $(element).find(".stix-viewer");
     let graph = $(element).find(".stix-graph");
 
-    if (cy) {
-        cy.remove("node");
-        cy.remove("edge");
-    } else {
-        cy = cache[element.dataset.stixViewId] = cytoscape({
-            container: graph,
-            style: DEFAULT_GRAPH_STYLE,
-            layout: layout,
-            userZoomingEnabled: !disableMouseZoom,
-            userPanningEnabled: !disablePanning,
-        });
-        cy.minZoom(minZoom || 0.3);
-        cy.maxZoom(maxZoom || 2.5);
+    let cy = cache[element.dataset.stixViewId] = cytoscape({
+        style: DEFAULT_GRAPH_STYLE,
+        userZoomingEnabled: !disableMouseZoom,
+        userPanningEnabled: !disablePanning,
+    });
+    cy.stixviewContainer = graph;
+    cy.minZoom(minZoom || 0.3);
+    cy.maxZoom(maxZoom || 2.5);
 
-        cy.on('layoutstop', callback);
+    cy.highlightedObjects = highlightedObjects;
+    cy.hiddenObjects = hiddenObjects;
+    cy.showMarkings = cy.showMarkings;
 
-//        setInterval(function() {
-//            if (!element.hidden) {
-//                if (cy.headless()) {
-//                    cy.mount();
-//                    console.info("mounted", cy.headless(), element.dataset.stixViewId);
-//                }
-//            } else {
-//                if (!cy.headless()) {
-//                    cy.unmount();
-//                    console.info("unmounted", cy.headless(), element.dataset.stixViewId);
-//                }
-//            }
-//        }, 1000);
-
-        //cy.autopanOnDrag({enabled: true});
-        //configureKeyboardListener(cy);
-        //configureButtonListeners(cy);
+    let graphInterface = {
+        cy: cy,
+        element: element,
+        options: options,
+        runLayout: function(layoutName) {
+            return runLayout(cy, layoutName);
+        },
+        enableLabels: function() {
+            cy.style()
+              .selector('node')
+              .style('label', 'data(label)')
+              .update();
+        },
+        disableLabels: function() {
+            cy.style()
+              .selector('node')
+              .style('label', '')
+              .update();
+        },
+        fit: function() {
+            cy.fit();
+        },
+        showIdrefs: function(callback) {
+            setTimeout(function() {
+                loadGraph(graphInterface, cy.raw_data, true, loadCallback);
+                callback && callback();
+            }, 20);
+        },
+        hideIdrefs: function(callback) {
+            setTimeout(function() {
+                loadGraph(graphInterface, cy.raw_data, false, loadCallback);
+                callback && callback();
+            }, 20);
+        },
+        loadData: function(data) {
+            loadGraph(graphInterface, cy.raw_data, showIdrefs, loadCallback);
+        },
+        loadDataFromFile: function(file) {
+            if (file && file.type == 'application/json') {
+                readFile(file, function(bundle) {
+                    loadGraph(graphInterface, bundle, showIdrefs, loadCallback);
+                })
+            }
+        },
+        loadDataFromUrl: function(url) {
+            loadRemoteFile(url, function(response) {
+                loadGraph(graphInterface, response, showIdrefs, loadCallback);
+            });
+        },
+        loadDataFromParamUrl: function(paramName) {
+            loadFileFromParam(paramName, function(response) {
+                loadGraph(graphInterface, JSON.parse(response), showIdrefs, loadCallback);
+            });
+        }
     }
+
+    if (showSidebar) {
+        $(viewer).append("<div class='sidebar'></div>")
+        cy.sidebar = $(viewer).find('.sidebar');
+    }
+
+    cy.graphInterface = graphInterface;
+    cy.layoutName = layout;
+    cy.stixId = stixId;
+    cy.element = element;
+
+    if (gistId || url) {
+        fetchData($elem, gistId, gistFile, url, dataFetchCallback);
+    }
+
+    return graphInterface;
+}
+
+
+function loadGraph(graphInterface, bundle, showIdrefs, callback) {
+    let cy = graphInterface.cy;
+    cy.remove("node");
+    cy.remove("edge");
+
+    cy.mount(cy.stixviewContainer);
+
+    $(graphInterface.element).find('.viewer-placeholder').remove();
+
     let graphElements = makeElements(
-        bundle, showIdrefs, highlightedObjects, hiddenObjects, showMarkings);
+        bundle,
+        showIdrefs,
+        cy.highlightedObjects,
+        cy.hiddenObjects,
+        cy.showMarkings);
 
     cy.add(graphElements);
     cy.raw_data = bundle;
-    cy.style().selector('node').style('label', 'data(label)').update();
 
-    runLayout(cy, layout || DEFAULT_LAYOUT);
+    cy.once('layoutstop', function() {
+        callback && callback(graphInterface);
+    });
 
-    if (showSidebar) {
-        initSidebar(viewer, stixId, cy);
+    if (!graphInterface.options.disableLabels) {
+        cy.style()
+          .selector('node')
+          .style('label', 'data(label)')
+          .update();
     }
+
     if (!graphElements) {
-        callback()
+        callback && callback(graphInterface);
+    }
+    initDownloadLink(cy.element, bundle);
+
+    runLayout(cy, cy.layoutName || DEFAULT_LAYOUT);
+    if (cy.sidebar) {
+        initSidebar(cy, cy.stixId);
     }
 }
+
 
 function isScrolledIntoView(el) {
     var rect = el.getBoundingClientRect();
@@ -851,4 +1022,4 @@ function isScrolledIntoView(el) {
     return isVisible;
 }
 
-export default initGraph;
+export { initGraph, loadGraph };

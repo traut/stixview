@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>graph viewer - stixview</title>
+    <style type="text/css">
+        body, html {
+            height: 100%;
+        }
+
+        body {
+            font-family: sans-serif;
+            font-size: 11pt;
+            line-height: 1.7em;
+            margin: 0px;
+            padding: 10px 20px 0px;
+        }
+        a {
+            color: #aaa;
+        }
+        .toolbar input#fileupload {
+            margin: 5px 0px 0px;
+        }
+        .toolbar .tip {
+            color: #ccc;
+        }
+    </style>
+    <script src="https://unpkg.com/jquery"></script>
+</head>
+<body>
+<div class="toolbar">
+    <select id="layout-select">
+        <optgroup label="Layouts">
+            <option value="cose-bilkent">cose-bilkent</option>
+            <option value="klay">klay</option>
+            <option value="dagre">dagre</option>
+            <option value="cola" selected>cola</option>
+        </optgroup>
+    </select>
+    <button id="fit-graph">Fit graph</button>
+    |
+    <button id="toggle-labels">Toggle labels</button>
+    |
+    <button id="toggle-idrefs">Toggle idrefs</button>
+    |
+    <span class="tip">Cmd+Click for multiselect</span>
+    |
+    <a href="?bundle=https://raw.githubusercontent.com/oasis-open/cti-stix2-json-schemas/master/examples/threat-reports/poisonivy.json">load an example</a> 
+    <input type="file" id="fileupload" style="float:right"/>
+</div>
+
+<div id="graph" 
+     data-stix-allow-dragdrop=true
+     data-show-sidebar=true
+     data-layout=cola
+     data-graph-width='100%'
+     data-graph-height='85vh'>
+</div>
+
+<script>
+    window.stixview.onLoad("#graph", function(graph){
+        console.info("Data loaded");
+    });
+
+    window.stixview.onInit("#graph", function(graph){
+        console.info("Initiated");
+        graph.loadDataFromParamUrl('bundle');
+
+        $("#fileupload").on('change', function(e) {
+            var files = e.target.files; // FileList object
+            if (files.length > 1) {
+                console.error("More than 1 file dropped, picking first one")
+            };
+            if (files.lengh == 0) {
+                return
+            }
+            var file = files[0];
+            graph.loadDataFromFile(file);
+        });
+
+        $("#layout-select").on('change', function(e) {
+            graph.runLayout(e.target.value);
+            document.getElementById('layout-select').value = e.target.value;
+        });
+
+        let showLabels = true;
+        $("#toggle-labels").on('click', function(e) {
+            e.preventDefault();
+            if (!showLabels) {
+                graph.enableLabels();
+                showLabels = true;
+            } else {
+                graph.disableLabels();
+                showLabels = false;
+            }
+        });
+        $("#fit-graph").on('click', function() { graph.fit() });
+
+        let showIdrefs = false;
+        $("#toggle-idrefs").on('click', function(e) {
+            e.preventDefault();
+            if (!showIdrefs) {
+                graph.showIdrefs(function() {
+                    console.info("show-idrefs done");
+                });
+                showIdrefs = true;
+            } else {
+                graph.hideIdrefs(function() {
+                    console.info("hide-idrefs done");
+                });
+                showIdrefs = false;
+            }
+        });
+    });
+
+</script>
+
+</body>
+</html>
+

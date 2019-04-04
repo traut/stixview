@@ -34,7 +34,8 @@
     "cytoscape-euler": "^1.2.1",
     "cytoscape-klay": "^3.1.2",
     "jquery": "^3.3.1",
-    "underscore": "^1.9.1"
+    "underscore": "^1.9.1",
+    "yarn": "^1.15.2"
   },
   "devDependencies": {
     "css-loader": "^2.1.1",
