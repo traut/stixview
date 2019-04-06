@@ -1,16 +1,15 @@
 import $ from 'jquery';
-import _ from 'underscore';
 
 
-let urlCache = {};
-let gistCache = {};
+const urlCache = {};
+const gistCache = {};
 
 
 function loadUrl(url) {
-    let p = urlCache[url] || new Promise(function(resolve, reject) {
+    const p = urlCache[url] || new Promise(function(resolve, reject) {
         $.get(url)
             .done(function(res) {
-                let bundle = JSON.parse(res);
+                const bundle = JSON.parse(res);
                 resolve(bundle);
             })
             .fail(reject);
@@ -21,16 +20,16 @@ function loadUrl(url) {
 
 
 function loadGist(id, file) {
-    let url = 'https://api.github.com/gists/' + id;
+    const url = 'https://api.github.com/gists/' + id;
 
-    let p = gistCache[id] || new Promise(function(resolve, reject) {
+    const p = gistCache[id] || new Promise(function(resolve, reject) {
         $.get(url)
             .done(function(res) {
                 file = file || Object.keys(res.files)[0];
-                let details = res.files[file];
+                const details = res.files[file];
                 resolve({
                     bundle: JSON.parse(details.content),
-                    url: details.raw_url
+                    url: details.raw_url,
                 });
             })
             .fail(reject);
@@ -39,8 +38,10 @@ function loadGist(id, file) {
     return p;
 }
 
+
 function isTrue(prop) {
     return (prop != null && prop != 'false');
 }
 
-export { loadUrl, loadGist, isTrue };
+
+export {loadUrl, loadGist, isTrue};
