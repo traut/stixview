@@ -2,4 +2,4 @@
 .gitignore
 .npmignore
 node_module
-_config.yaml
+_config.yml
