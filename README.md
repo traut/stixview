@@ -1,6 +1,8 @@
 stixview
 ========
 
+[![npm version](https://badge.fury.io/js/stixview.svg)](https://badge.fury.io/js/stixview)
+
 [stixview](https://github.com/traut/stixview) is an embeddable STIX2 graph library.
 
 Motivation
