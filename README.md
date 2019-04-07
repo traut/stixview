@@ -98,7 +98,7 @@ stixview supports these `data-` attributes:
 `graph-height` (`600` pixels by default) — height of a graph element. Both pixel and % values are supported (see misc demo page for an example).
 
 
-## Browser object
+### Browser object
 
 The library, when used in a browser, will register `stixview` variable on `window` object with these properties:
 
@@ -109,7 +109,7 @@ The library, when used in a browser, will register `stixview` variable on `windo
 `onLoad(selector, callback)` – listener hook for graph's load event on a DOM element that matches provided `selector` value (see [demo](https://traut.github.io/stixview/dist/demos/viewer.html) for usage example). Callback receive instance of a graph interface.
 
 
-## Graph object
+### Graph object
 
 Graph is an object with properties:
 
