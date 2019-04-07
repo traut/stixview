@@ -28,6 +28,7 @@
     "url": "https://github.com/traut/stixview/issues"
   },
   "homepage": "https://github.com/traut/stixview",
+  "unpkg": "dist/stixview.bundle.js",
   "dependencies": {
     "cytoscape": "^3.5.0",
     "cytoscape-autopan-on-drag": "^2.1.0",
