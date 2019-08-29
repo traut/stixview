@@ -1,5 +1,6 @@
 const $ = require('jquery');
 const _ = require('underscore');
+const DEFAULT_GRAPH_STYLE = require('./viewer').DEFAULT_GRAPH_STYLE;
 const initGraph = require('./viewer').initGraph;
 const loadGraph = require('./viewer').loadGraph;
 const isTrue = require('./utils').isTrue;
@@ -99,6 +100,8 @@ const exports = module.exports = {
     onLoad: function(selector, callback) {
         loadCallbacks[selector] = callback;
     },
+    initGraph: initGraph,
+    DEFAULT_GRAPH_STYLE: DEFAULT_GRAPH_STYLE,
 };
 
 

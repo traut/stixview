@@ -734,13 +734,11 @@ function initGraph(element, options, dataFetchCallback, loadCallback) {
         maxZoom,
         graphWidth,
         graphHeight,
+        style,
+        onClickNode,
     } = options;
 
     const $elem = $(element);
-
-    if (!gistId && !url && !allowDragDrop) {
-        return false;
-    }
     const width = graphWidth || element.clientWidth || 800;
     const height = graphHeight || 600;
 
@@ -767,7 +765,7 @@ function initGraph(element, options, dataFetchCallback, loadCallback) {
     const stixId = element.dataset.stixViewId;
 
     const cy = cache[element.dataset.stixViewId] = cytoscape({
-        style: DEFAULT_GRAPH_STYLE,
+        style: style || DEFAULT_GRAPH_STYLE,
         userZoomingEnabled: !disableMouseZoom,
         userPanningEnabled: !disablePanning,
     });
@@ -775,8 +773,8 @@ function initGraph(element, options, dataFetchCallback, loadCallback) {
     cy.minZoom(minZoom || 0.3);
     cy.maxZoom(maxZoom || 2.5);
 
-    cy.highlightedObjects = highlightedObjects;
-    cy.hiddenObjects = hiddenObjects;
+    cy.highlightedObjects = highlightedObjects || [];
+    cy.hiddenObjects = hiddenObjects || [];
     cy.showMarkings = showMarkings;
 
     const graphInterface = {
@@ -814,7 +812,7 @@ function initGraph(element, options, dataFetchCallback, loadCallback) {
             }, 20);
         },
         loadData: function(data) {
-            loadGraph(graphInterface, cy.raw_data, showIdrefs, loadCallback);
+            loadGraph(graphInterface, data, showIdrefs, loadCallback);
         },
         loadDataFromFile: function(file) {
             if (file && file.type == 'application/json') {
@@ -838,6 +836,14 @@ function initGraph(element, options, dataFetchCallback, loadCallback) {
     if (showSidebar) {
         $viewer.append('<div class="sidebar"></div>');
         cy.sidebar = $viewer.find('.sidebar');
+    }
+
+    if (onClickNode) {
+        cy.on('click', 'node', function(e) {
+            e.preventDefault();
+            const clickedNode = e.target.data();
+            onClickNode(clickedNode);
+        });
     }
 
     cy.graphInterface = graphInterface;
@@ -895,4 +901,4 @@ function loadGraph(graphInterface, bundle, showIdrefs, callback) {
 }
 
 
-export {initGraph, loadGraph};
+export {initGraph, loadGraph, DEFAULT_GRAPH_STYLE};
