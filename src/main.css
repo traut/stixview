@@ -48,12 +48,13 @@
 }
 
 .viewer-placeholder {
+    top: 45%;
+    position: relative;
     font-family: sans-serif;
-    padding-top: 20%;
-    padding-left: 30%;
     font-size: 2em;
-    color: #afafaf;
-    font-weight: normal;
+    color: #d6d6d6;
+    font-weight: lighter;
+    text-align: center;
 }
 
 .dragover-active {

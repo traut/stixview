@@ -750,10 +750,8 @@ function initGraph(element, options, dataFetchCallback, loadCallback) {
     const $graph = $viewer.find('.stix-graph');
 
     if (allowDragDrop) {
-        $graph.html(`
-            <div class='viewer-placeholder'>
-            Drag and drop STIX2 json file here
-            </div>`);
+        $graph.html(
+            `<div class='viewer-placeholder'>Drag and drop STIX2 json file here</div>`);
         initDragDrop(element, function(bundle) {
             dataFetchCallback(bundle);
         });
