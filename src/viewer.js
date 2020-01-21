@@ -899,4 +899,4 @@ function loadGraph(graphInterface, bundle, showIdrefs, callback) {
 }
 
 
-export {initGraph, loadGraph, DEFAULT_GRAPH_STYLE};
+export {initGraph, loadGraph};

@@ -17,10 +17,11 @@ The objective of [stixview](https://github.com/traut/stixview) library is to pro
 ## Demos
 
 To see stixview in action, take a look at these demo pages:
-* [multiple graphs per page, rendering selected entities from the same STIX bundle](https://traut.github.io/stixview/dist/demos/story.html)
-* [graph viewer with custom buttons](https://traut.github.io/stixview/dist/demos/viewer.html)
-* [drag-n-drop example](https://traut.github.io/stixview/dist/demos/drag-n-drop.html)
-* [misc](https://traut.github.io/stixview/dist/demos/misc.html)
+* [Storyline](https://traut.github.io/stixview/dist/demos/story.html) — multiple graphs per page, rendering selected entities from the same STIX bundle.
+* [Viewer](https://traut.github.io/stixview/dist/demos/viewer.html) — graph viewer with custom controls.
+* [Drag-n-drop](https://traut.github.io/stixview/dist/demos/drag-n-drop.html) — graph views with drag-n-drop enabled.
+* [Dark theme graph from inline data](https://traut.github.io/stixview/dist/demos/load-data.html) — rendering graph from inline STIX2 bundle and custom styling.
+* [Examples of various configuration settings](https://traut.github.io/stixview/dist/demos/misc.html)
 
 
 ## Usage
@@ -107,6 +108,8 @@ The library, when used in a browser, will register `stixview` variable on `windo
 `onInit(selector, callback)` – listener hook for graph's init event on a DOM element that matches provided `selector` value (see [demo](https://traut.github.io/stixview/dist/demos/viewer.html) for usage example). Callback receive instance of a graph interface.
 
 `onLoad(selector, callback)` – listener hook for graph's load event on a DOM element that matches provided `selector` value (see [demo](https://traut.github.io/stixview/dist/demos/viewer.html) for usage example). Callback receive instance of a graph interface.
+
+`init(element, properties, initCallback, loadCallback)` — method that initiates a graph view in specified `element` with provided `properties` that override defaults (see [demo](https://traut.github.io/stixview/dist/demos/load-data.html) for usage example).
 
 
 ### Graph object
