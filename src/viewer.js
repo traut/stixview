@@ -45,8 +45,6 @@ const vulnerabilityIcon = require(
 const hypothesisIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/x-eclecticiq-hypothesis.svg');
 
-import {loadUrl, loadGist} from './utils.js';
-
 
 cytoscape.use(klay);
 cytoscape.use(euler);
@@ -484,22 +482,6 @@ function initDownloadLinks(cy) {
 }
 
 
-function loadRemoteFile(url, callback) {
-    $.get(url, function(response) {
-        callback(response);
-    });
-}
-
-
-function loadFileFromParam(paramName, callback) {
-    const url = new URL(window.location.href);
-    const remoteBundle = url.searchParams.get(paramName);
-    if (remoteBundle) {
-        loadRemoteFile(remoteBundle, callback);
-    }
-}
-
-
 function runLayout(cy, layoutName) {
     const layout = cy.layout({
         name: layoutName,
@@ -657,8 +639,8 @@ function initWrapper(element, options) {
             <div class='viewer-footer'>
                 made with <a href="https://traut.github.io/stixview/">stixview</a>
                 <span style="float:right">
-                    <a href="#" class="download-json">STIX2 ↓</a>&nbsp;
-                    <a href="#" class="download-png">PNG ↓</a>
+                    <a href="#" class="download-json">STIX2</a>&nbsp;
+                    <a href="#" class="download-png">PNG</a>
                 </span>
             </div>
         `);
@@ -707,41 +689,12 @@ function initDragDrop(elem, callback) {
 }
 
 
-function fetchData($elem, gistId, file, url, callback) {
-    if (gistId) {
-        loadGist(gistId, file)
-            .then(
-                function({bundle, url}) {
-                    $elem.removeClass('loading');
-                    callback(bundle);
-                },
-                function(error) {
-                    console.error('can not load gist ' + gistId, error);
-                });
-    } else if (url) {
-        loadUrl(url)
-            .then(
-                function(bundle) {
-                    $elem.removeClass('loading');
-                    callback(bundle);
-                },
-                function(error) {
-                    console.error('can not load url ' + url, error);
-                });
-    }
-}
-
-
-function initGraph(element, options, dataFetchCallback, loadCallback) {
+function initGraph(element, options, dataFetchCallback) {
     const {
-        gistId,
-        gistFile,
-        url,
         allowDragDrop,
         caption,
         layout,
         showSidebar,
-        showIdrefs,
         disableMouseZoom,
         disablePanning,
         highlightedObjects,
@@ -773,14 +726,9 @@ function initGraph(element, options, dataFetchCallback, loadCallback) {
         });
     }
 
-    if (gistId || url) {
-        $elem.addClass('loading');
-        $elem.find('.viewer-placeholder').remove();
-    }
-
     const stixId = element.dataset.stixViewId;
 
-    const cy = cache[element.dataset.stixViewId] = cytoscape({
+    const cy = cache[stixId] = cytoscape({
         style: style || DEFAULT_GRAPH_STYLE,
         userZoomingEnabled: !disableMouseZoom,
         userPanningEnabled: !disablePanning,
@@ -793,9 +741,27 @@ function initGraph(element, options, dataFetchCallback, loadCallback) {
     cy.hiddenObjects = hiddenObjects || [];
     cy.showMarkings = showMarkings;
 
-    const graphInterface = {
+    if (showSidebar) {
+        $viewer.append('<div class="sidebar"></div>');
+        cy.sidebar = $viewer.find('.sidebar');
+    }
+
+    if (onClickNode) {
+        cy.on('click', 'node', function(e) {
+            e.preventDefault();
+            const clickedNode = e.target.data();
+            onClickNode(clickedNode);
+        });
+    }
+
+    cy.layoutName = layout;
+    cy.stixId = stixId;
+    cy.element = element;
+
+    const graph = {
         cy: cy,
         element: element,
+        $elem: $elem,
         options: options,
         runLayout: function(layoutName) {
             return runLayout(cy, layoutName);
@@ -815,74 +781,26 @@ function initGraph(element, options, dataFetchCallback, loadCallback) {
         fit: function() {
             cy.fit();
         },
-        showIdrefs: function(callback) {
-            setTimeout(function() {
-                loadGraph(graphInterface, cy.raw_data, true, loadCallback);
-                callback && callback();
-            }, 20);
+        markAsLoading: function() {
+            $elem.addClass('loading');
+            $elem.find('.viewer-placeholder').remove();
         },
-        hideIdrefs: function(callback) {
-            setTimeout(function() {
-                loadGraph(graphInterface, cy.raw_data, false, loadCallback);
-                callback && callback();
-            }, 20);
-        },
-        loadData: function(data) {
-            loadGraph(graphInterface, data, showIdrefs, loadCallback);
-        },
-        loadDataFromFile: function(file) {
-            if (file && file.type == 'application/json') {
-                readFile(file, function(bundle) {
-                    loadGraph(graphInterface, bundle, showIdrefs, loadCallback);
-                });
-            }
-        },
-        loadDataFromUrl: function(url) {
-            loadRemoteFile(url, function(response) {
-                loadGraph(graphInterface, response, showIdrefs, loadCallback);
-            });
-        },
-        loadDataFromParamUrl: function(paramName) {
-            loadFileFromParam(paramName, function(response) {
-                loadGraph(graphInterface, JSON.parse(response), showIdrefs, loadCallback);
-            });
+        markAsNotLoading: function() {
+            graph.$elem.removeClass('loading');
         },
     };
-
-    if (showSidebar) {
-        $viewer.append('<div class="sidebar"></div>');
-        cy.sidebar = $viewer.find('.sidebar');
-    }
-
-    if (onClickNode) {
-        cy.on('click', 'node', function(e) {
-            e.preventDefault();
-            const clickedNode = e.target.data();
-            onClickNode(clickedNode);
-        });
-    }
-
-    cy.graphInterface = graphInterface;
-    cy.layoutName = layout;
-    cy.stixId = stixId;
-    cy.element = element;
-
-    if (gistId || url) {
-        fetchData($elem, gistId, gistFile, url, dataFetchCallback);
-    }
-
-    return graphInterface;
+    return graph;
 }
 
 
-function loadGraph(graphInterface, bundle, showIdrefs, callback) {
-    const cy = graphInterface.cy;
+function loadGraph(graph, bundle, showIdrefs, callback) {
+    const cy = graph.cy;
     cy.remove('node');
     cy.remove('edge');
 
     cy.mount(cy.stixviewContainer);
 
-    $(graphInterface.element).find('.viewer-placeholder').remove();
+    graph.$elem.find('.viewer-placeholder').remove();
 
     const graphElements = makeElements(
         bundle,
@@ -895,10 +813,10 @@ function loadGraph(graphInterface, bundle, showIdrefs, callback) {
     cy.raw_data = bundle;
 
     cy.once('layoutstop', function() {
-        callback && callback(graphInterface);
+        callback && callback(graph);
     });
 
-    if (!graphInterface.options.disableLabels) {
+    if (!graph.options.disableLabels) {
         cy.style()
             .selector('node')
             .style('label', 'data(label)')
@@ -906,7 +824,7 @@ function loadGraph(graphInterface, bundle, showIdrefs, callback) {
     }
 
     if (!graphElements) {
-        callback && callback(graphInterface);
+        callback && callback(graph);
     }
     initDownloadLinks(cy);
 

@@ -1,41 +1,43 @@
 import $ from 'jquery';
 
-
 const urlCache = {};
-const gistCache = {};
-
 
 function loadUrl(url) {
     const p = urlCache[url] || new Promise(function(resolve, reject) {
-        $.get(url)
-            .done(function(res) {
-                const bundle = JSON.parse(res);
-                resolve(bundle);
-            })
-            .fail(reject);
+        if (!url) {
+            reject(new Error('No URL provided'));
+            return;
+        }
+        $.get(url).done(function(res) {
+            const bundle = JSON.parse(res);
+            resolve(bundle);
+        }).fail(reject);
     });
-    urlCache[url] = p;
+    if (url) {
+        urlCache[url] = p;
+    }
     return p;
 }
 
 
 function loadGist(id, file) {
     const url = 'https://api.github.com/gists/' + id;
-
-    const p = gistCache[id] || new Promise(function(resolve, reject) {
-        $.get(url)
-            .done(function(res) {
-                file = file || Object.keys(res.files)[0];
-                const details = res.files[file];
-                resolve({
-                    bundle: JSON.parse(details.content),
-                    url: details.raw_url,
-                });
-            })
-            .fail(reject);
+    const p = urlCache[url] || new Promise(function(resolve, reject) {
+        $.get(url).done(function(res) {
+            file = file || Object.keys(res.files)[0];
+            const details = res.files[file];
+            resolve(JSON.parse(details.content));
+        }).fail(reject);
     });
-    gistCache[id] = p;
+    urlCache[url] = p;
     return p;
+}
+
+
+function loadUrlFromParam(paramName) {
+    const url = new URL(window.location.href);
+    const remoteBundleUrl = url.searchParams.get(paramName);
+    return loadUrl(remoteBundleUrl);
 }
 
 
@@ -44,4 +46,4 @@ function isTrue(prop) {
 }
 
 
-export {loadUrl, loadGist, isTrue};
+export {loadUrl, loadGist, isTrue, loadUrlFromParam};

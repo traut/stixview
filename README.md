@@ -103,7 +103,7 @@ stixview supports these `data-` attributes:
 
 The library, when used in a browser, will register `stixview` variable on `window` object with these properties:
 
-`graphs` — a registry of graphs initiated on a page.
+`registry` — a registry of graphs initiated on a page.
 
 `onInit(selector, callback)` – listener hook for graph's init event on a DOM element that matches provided `selector` value (see [demo](https://traut.github.io/stixview/dist/demos/viewer.html) for usage example). Callback receive instance of a graph interface.
 

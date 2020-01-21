@@ -64,7 +64,12 @@
 
     window.stixview.onInit("#graph", function(graph){
         console.info("Initiated");
-        graph.loadDataFromParamUrl('bundle');
+
+        const url = new URL(window.location.href);
+        const remoteBundleUrl = url.searchParams.get('bundle');
+        if (remoteBundleUrl) {
+            graph.loadDataFromParamUrl('bundle');
+        }
 
         $("#fileupload").on('change', function(e) {
             var files = e.target.files; // FileList object
