@@ -86,7 +86,7 @@ $(function() {
 });
 
 
-const exports = module.exports = {
+const stixviewExports = module.exports = {
     graphs: graphRegistry,
     onInit: function(selector, callback) {
         initCallbacks[selector] = callback;
@@ -99,5 +99,5 @@ const exports = module.exports = {
 
 
 if (typeof window !== 'undefined') {
-    window.stixview = exports;
+    window.stixview = stixviewExports;
 }
