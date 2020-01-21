@@ -86,20 +86,20 @@
     word-wrap: break-word;
 }
 
-.sidebar-close-icon {
+.sidebar .sidebar-close-icon {
     float: right;
     font-size: 20pt;
     padding: 0px 10px;
     cursor: pointer;
 }
 
-.sidebar-type-icon {
+.sidebar img.sidebar-type-icon {
     height: 30px;
     vertical-align: middle;
     margin-right: 5px;
 }
 
-.sidebar-textarea {
+.sidebar .sidebar-textarea {
     height: 400px;
     max-height: 300px;  
     width: 100%;
