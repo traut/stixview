@@ -458,13 +458,28 @@ function downloadData(data) {
     })[0].click();
 }
 
+function downloadPng(data) {
+    $('<a />', {
+        'download': 'graph.png',
+        'href': data,
+    }).appendTo('body').click(function() {
+        $(this).remove();
+    })[0].click();
+}
 
-function initDownloadLink(element, bundle) {
-    const $elem = $(element).find('.download');
+
+function initDownloadLinks(cy) {
+    const $elem = $(cy.element).find('.download-json');
     $elem.off('click');
     $elem.on('click', function(e) {
         e.preventDefault();
-        downloadData(bundle);
+        downloadData(cy.raw_data);
+    });
+    const $elem2 = $(cy.element).find('.download-png');
+    $elem2.off('click');
+    $elem2.on('click', function(e) {
+        e.preventDefault();
+        downloadPng(cy.png());
     });
 }
 
@@ -641,7 +656,10 @@ function initWrapper(element, options) {
         $elem.append(`
             <div class='viewer-footer'>
                 made with <a href="https://traut.github.io/stixview/">stixview</a>
-                <a href="#" class="download" style="float:right">↓STIX2 bundle</a>
+                <span style="float:right">
+                    <a href="#" class="download-json">STIX2 ↓</a>&nbsp;
+                    <a href="#" class="download-png">PNG ↓</a>
+                </span>
             </div>
         `);
     }
@@ -890,7 +908,7 @@ function loadGraph(graphInterface, bundle, showIdrefs, callback) {
     if (!graphElements) {
         callback && callback(graphInterface);
     }
-    initDownloadLink(cy.element, bundle);
+    initDownloadLinks(cy);
 
     runLayout(cy, cy.layoutName || DEFAULT_LAYOUT);
     if (cy.sidebar) {
