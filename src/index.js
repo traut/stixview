@@ -48,7 +48,7 @@ function init(element, props, initCallback, loadCallback) {
     const loadDataInGraph = (bundle) => {
         loadGraph(graph, bundle, showIdrefs, (graph) => {
             graph.markAsNotLoading();
-            loadCallback & loadCallback(graph);
+            loadCallback && loadCallback(graph);
         });
     };
 
