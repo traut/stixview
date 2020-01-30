@@ -4,6 +4,8 @@
 
 [stixview](https://github.com/traut/stixview) is an embeddable STIX2 graph library.
 
+[jupyter-widget-stixview](https://github.com/traut/jupyter-widget-stixview) is a Jupyter notebook widget that uses stixview to render STIX2 graphs.
+
 
 ## Motivation
 
