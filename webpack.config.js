@@ -19,6 +19,7 @@ const demoFiles = fs.readdirSync(DEMO_SRC_DIR).map(function(filename) {
 module.exports = {
     entry: './src/index.js',
     mode: 'production',
+    // mode: 'development',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'stixview.bundle.js',
@@ -38,7 +39,8 @@ module.exports = {
             },
         ],
     },
-    watch: true,
+    watch: false,
+    // watch: true,
     optimization: {
         minimize: true,
     },
