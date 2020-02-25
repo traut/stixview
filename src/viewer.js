@@ -46,6 +46,22 @@ const hypothesisIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/x-eclecticiq-hypothesis.svg');
 
 
+const unknownIconTmpl = `
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="event-icon">
+    <circle id="e" cx="100" cy="100" r="100" fill="#B99435"/>
+    <text
+        x="50%" y="150"
+        text-anchor="middle"
+        style="font: bold 150px sans-serif"
+        fill="white" stroke="white">
+        <%= letter %>
+    </text>
+</g>
+</svg>
+`;
+
+
 cytoscape.use(klay);
 cytoscape.use(euler);
 cytoscape.use(coseBilkent);
@@ -193,15 +209,6 @@ const TLP_HEX_COLORS = {
 };
 
 
-const REF_FIELDS = [
-    'sighting_of_ref',
-    'created_by_ref',
-    'object_marking_refs',
-    'object_refs',
-    'x_eclecticiq_alternative_hypothesis_refs',
-];
-
-
 const DEFAULT_GRAPH_STYLE = [
     {
         selector: 'node',
@@ -216,8 +223,8 @@ const DEFAULT_GRAPH_STYLE = [
             'text-valign': 'bottom',
             'text-halign': 'center',
             'label': '',
-            'font-size': '10pt',
             'color': 'rgba(0, 0, 0, 0.5)',
+            'font-size': '10pt',
             'text-max-width': '300px',
             'text-wrap': 'ellipsis',
         },
@@ -300,7 +307,12 @@ const DEFAULT_GRAPH_STYLE = [
 
 
 function makeNodeElement(obj) {
-    const icon = iconPerType[obj.type];
+    let icon = iconPerType[obj.type];
+
+    if (!icon) {
+        icon = getUnknownIcon(obj.type);
+    }
+
     if (obj.type === 'marking-definition') {
         icon.color = TLP_HEX_COLORS[obj.definition.tlp];
     }
@@ -311,7 +323,6 @@ function makeNodeElement(obj) {
             label: obj.name,
             _raw: obj,
             shape: 'ellipse',
-            color: '#ccc',
             type: obj.type,
             ...icon,
         },
@@ -355,7 +366,8 @@ function makeEdgesForRefs(node) {
         return edges;
     }
     _.forEach(entity, function (val, field) {
-        if (REF_FIELDS.indexOf(field) == -1) {
+        // treat all fields ending with _ref(s) as a reference fields
+        if (!field.endsWith('_ref') && !field.endsWith('_refs')) {
             return;
         }
         const refs = (typeof val === 'string') ? [val] : val;
@@ -397,13 +409,24 @@ function makeRelationshipNode(existingEdge) {
     return {node: newNode, edges: newEdges};
 }
 
+function getUnknownIcon(nodeType) {
+    const template = _.template(unknownIconTmpl);
+    const letter = nodeType.charAt(0).toUpperCase();
+    return {
+        color: '#B99435',
+        shape: 'ellipse',
+        image: encodeSvg(template({
+            nodeType: nodeType,
+            letter: letter})),
+    };
+}
+
 
 function showNodeDetails($sidebar, stixId, node) {
     const entity = node._raw;
     const tmpl = _.template(`
         <img class='sidebar-type-icon'
-             src='<%= icon.image %>'
-             onerror="this.style.display='none'"/>
+             src='<%= icon %>'>
         <%= obj.type %>
         <span class='sidebar-close-icon'>×</span>
         <h2 class='sidebar-title'><%- (obj.name || (
@@ -422,15 +445,14 @@ function showNodeDetails($sidebar, stixId, node) {
         <p><strong>ID:</strong> <%= obj.id %></p>
         <p>
             <strong>JSON:</strong><br/>
-            <textarea class='sidebar-textarea' readonly='yes'>
-                <%- JSON.stringify(obj, null, 4) %>
+            <textarea class='sidebar-textarea' readonly='yes'><%- JSON.stringify(obj, null, 4) %>
             </textarea>
         </p>
     `);
     $sidebar.html(tmpl({
         obj: entity,
         elId: stixId,
-        icon: iconPerType[entity.type]}));
+        icon: (iconPerType[entity.type] || getUnknownIcon(entity.type)).image}));
     $sidebar.find('.sidebar-close-icon').on('click', function() {
         $sidebar.css('display', 'none');
     });
