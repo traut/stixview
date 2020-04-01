@@ -11,6 +11,9 @@ import dagre from 'cytoscape-dagre';
 
 import autopanOnDrag from 'cytoscape-autopan-on-drag';
 
+import {readFile} from './utils.js';
+
+
 const indicatorIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/indicator.svg');
 const attackPatternIcon = require(
@@ -666,18 +669,6 @@ function initWrapper(element, options) {
                 </span>
             </div>
         `);
-    }
-}
-
-
-function readFile(file, callback) {
-    if (file.type == 'application/json') {
-        const reader = new FileReader();
-        reader.onload = function(e2) {
-            const data = JSON.parse(e2.target.result);
-            callback(data);
-        };
-        reader.readAsText(file); // start reading the file data.
     }
 }
 

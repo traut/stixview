@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import {initGraph, loadGraph} from './viewer';
-import {isTrue, loadUrl, loadGist, loadUrlFromParam} from './utils.js';
+import {isTrue, loadUrl, loadGist, loadUrlFromParam, readFile} from './utils.js';
 
 // import css for webpack to include
 /* eslint-disable-next-line no-unused-vars */

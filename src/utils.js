@@ -46,4 +46,16 @@ function isTrue(prop) {
 }
 
 
-export {loadUrl, loadGist, isTrue, loadUrlFromParam};
+function readFile(file, callback) {
+    if (file.type == 'application/json') {
+        const reader = new FileReader();
+        reader.onload = function(e2) {
+            const data = JSON.parse(e2.target.result);
+            callback(data);
+        };
+        reader.readAsText(file); // start reading the file data.
+    }
+}
+
+
+export {loadUrl, loadGist, isTrue, loadUrlFromParam, readFile};
