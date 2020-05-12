@@ -6,6 +6,7 @@
 
 [jupyter-widget-stixview](https://github.com/traut/jupyter-widget-stixview) is a Jupyter notebook widget that uses stixview to render STIX2 graphs.
 
+![stixview graph](https://raw.githubusercontent.com/traut/stixview/master/stixview-graph.png)
 
 ## Motivation
 
