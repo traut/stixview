@@ -3,23 +3,34 @@
             font-family: sans-serif;
             padding-left: 20px;
             line-height: 1.7em;
-            background: #121212;
+            background-color: #121212;
         }
         a, a:visited {
             color: #cccccc;
-        }</style><script defer="defer" src="../stixview.bundle.js"></script></head><body><h2>Dark theme graph from inline data</h2><p><i>Created with <a href="https://traut.github.io/stixview/">Stixview</a> — embeddable STIX2 graph view library.</i></p><div id="graph-element" data-graph-width="1000" data-graph-height="1000"></div><script>const element = document.getElementById('graph-element');
-    const graph = window.stixview.init(element, {
-        style: getStyle(),
-        hideFooter: false,
-        showSidebar: false,
-        graphWidth: element.dataset.graphWidth,
-        graphHeight: element.dataset.graphHeight,
-        onClickNode: function(node) {
-            console.log('node clicked', node);
         }
+        .stix-viewer-block .viewer-footer {
+            background-color: #121212 !important;
+            border-color: #3e3e3e !important;
+        }
+        .stix-viewer-block .stix-viewer {
+            background-color: #121212 !important;
+            border-color: #3e3e3e !important;
+        }</style><script defer="defer" src="../stixview.bundle.js"></script></head><body><h2>Dark theme graph from inline data</h2><p><i>Created with <a href="https://traut.github.io/stixview/">Stixview</a> — embeddable STIX2 graph view library.</i></p><div id="graph-element" data-graph-width="1200" data-graph-height="1000"></div><script>window.addEventListener("load", function(){
+        const element = document.getElementById('graph-element');
+        const graph = window.stixview.init(element, {
+            style: getStyle(),
+            hideFooter: false,
+            showSidebar: false,
+            graphWidth: element.dataset.graphWidth,
+            graphHeight: element.dataset.graphHeight,
+            onClickNode: function(node) {
+                console.log('node clicked', node);
+            }
+        });
+        const data = getData();
+        graph.loadData(data);
+        console.info("Graph loaded");
     });
-    const data = getData();
-    graph.loadData(data);
 
     function getStyle() {
         const NODE_WIDTH = 30;
@@ -79,10 +90,8 @@
                 selector: 'edge',
                 style: {
                     'width': 1,
-                    'opacity': .5,
+                    'opacity': .2,
                     'label': 'data(label)',
-                    // 'curve-style': 'haystack',
-                    // 'haystack-radius': 0,
                     'curve-style': 'straight',
                     'line-color': '#fff',
                     'target-arrow-color': '#fff',
