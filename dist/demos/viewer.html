@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
-    <title>graph viewer - stixview</title>
-    <style type="text/css">
-        body, html {
+<!doctype html><html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml"><head><meta charset="UTF-8"><title>graph viewer - stixview</title><style>body, html {
             height: 100%;
         }
 
@@ -23,42 +17,7 @@
         }
         .toolbar .tip {
             color: #ccc;
-        }
-    </style>
-    <script src="https://unpkg.com/jquery"></script>
-<script type="text/javascript" src="../stixview.bundle.js"></script></head>
-<body>
-<div class="toolbar">
-    <select id="layout-select">
-        <optgroup label="Layouts">
-            <option value="cose-bilkent">cose-bilkent</option>
-            <option value="klay">klay</option>
-            <option value="dagre">dagre</option>
-            <option value="cola" selected>cola</option>
-        </optgroup>
-    </select>
-    <button id="fit-graph">Fit graph</button>
-    |
-    <button id="toggle-labels">Toggle labels</button>
-    |
-    <button id="toggle-idrefs">Toggle idrefs</button>
-    |
-    <span class="tip">Cmd+Click for multiselect</span>
-    |
-    <a href="?bundle=https://raw.githubusercontent.com/oasis-open/cti-stix2-json-schemas/master/examples/threat-reports/poisonivy.json">load an example</a> 
-    <input type="file" id="fileupload" style="float:right"/>
-</div>
-
-<div id="graph" 
-     data-stix-allow-dragdrop=true
-     data-show-sidebar=true
-     data-layout=cola
-     data-graph-width='100%'
-     data-graph-height='85vh'>
-</div>
-
-<script>
-    window.stixview.onLoad("#graph", function(graph){
+        }</style><script src="https://unpkg.com/jquery"></script><script defer="defer" src="../stixview.bundle.js"></script></head><body><div class="toolbar"><select id="layout-select"><optgroup label="Layouts"><option value="cose-bilkent">cose-bilkent</option><option value="klay">klay</option><option value="dagre">dagre</option><option value="cola" selected="selected">cola</option></optgroup></select> <button id="fit-graph">Fit graph</button> | <button id="toggle-labels">Toggle labels</button> | <button id="toggle-idrefs">Toggle idrefs</button> | <span class="tip">Cmd+Click for multiselect</span> | <a href="?bundle=https://raw.githubusercontent.com/oasis-open/cti-stix2-json-schemas/master/examples/threat-reports/poisonivy.json">load an example</a> <input type="file" id="fileupload" style="float:right"/></div><div id="graph" data-stix-allow-dragdrop="true" data-show-sidebar="true" data-layout="cola" data-graph-width="100%" data-graph-height="85vh"></div><script>window.stixview.onLoad("#graph", function(graph){
         console.info("Data loaded");
     });
 
@@ -116,10 +75,4 @@
                 showIdrefs = false;
             }
         });
-    });
-
-</script>
-
-</body>
-</html>
-
+    });</script></body></html>

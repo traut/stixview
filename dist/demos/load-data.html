@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
-    <title>dark theme from inline data - stixview</title>
-    <style type="text/css">
-        body {
+<!doctype html><html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml"><head><meta charset="UTF-8"><title>dark theme from inline data - stixview</title><style>body {
             color: #eeeeee;
             font-family: sans-serif;
             padding-left: 20px;
@@ -13,20 +7,7 @@
         }
         a, a:visited {
             color: #cccccc;
-        }
-    </style>
-<script type="text/javascript" src="../stixview.bundle.js"></script></head>
-<body>
-<h2>Dark theme graph from inline data</h2>
-<p><i>Created with <a href="https://traut.github.io/stixview/">Stixview</a> — embeddable STIX2 graph view library.</i></p>
-
-<div id="graph-element"
-     data-graph-width=1000
-     data-graph-height=1000>
-</div>
-
-<script>
-    const element = document.getElementById('graph-element');
+        }</style><script defer="defer" src="../stixview.bundle.js"></script></head><body><h2>Dark theme graph from inline data</h2><p><i>Created with <a href="https://traut.github.io/stixview/">Stixview</a> — embeddable STIX2 graph view library.</i></p><div id="graph-element" data-graph-width="1000" data-graph-height="1000"></div><script>const element = document.getElementById('graph-element');
     const graph = window.stixview.init(element, {
         style: getStyle(),
         hideFooter: false,
@@ -1951,7 +1932,4 @@
                 }
             ]
         };
-    }
-</script>
-</body>
-</html>
+    }</script></body></html>

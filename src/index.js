@@ -35,11 +35,11 @@ function init(element, props, initCallback, loadCallback) {
         graphWidth: element.dataset.graphWidth || element.clientWidth || 800,
         graphHeight: element.dataset.graphHeight || 600,
         highlightedObjects: (
-            element.dataset.highlightedObjects ?
-                element.dataset.highlightedObjects.split(',') : []),
+            element.dataset.highlightedObjects
+                ? element.dataset.highlightedObjects.split(',') : []),
         hiddenObjects: (
-            element.dataset.hiddenObjects ?
-                element.dataset.hiddenObjects.split(',') : []),
+            element.dataset.hiddenObjects
+                ? element.dataset.hiddenObjects.split(',') : []),
         minZoom: element.dataset.minZoom,
         maxZoom: element.dataset.maxZoom,
         ...props,
