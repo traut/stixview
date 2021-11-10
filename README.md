@@ -1,12 +1,12 @@
-## stixview
+## Stixview
 
 [![npm version](https://badge.fury.io/js/stixview.svg)](https://badge.fury.io/js/stixview)
 
-[stixview](https://github.com/traut/stixview) is an embeddable STIX2 graph library.
+[Stixview](https://github.com/traut/stixview) is an embeddable STIX2 graph library.
 
-![stixview graph](https://raw.githubusercontent.com/traut/stixview/master/stixview-graph.png)
+![Stixview graph](https://raw.githubusercontent.com/traut/stixview/master/stixview-graph.png)
 
-In addition, [jupyter-widget-stixview](https://github.com/traut/jupyter-widget-stixview) is a Jupyter notebook widget that uses stixview to render STIX2 graphs.
+In addition, [jupyter-widget-stixview](https://github.com/traut/jupyter-widget-stixview) is a Jupyter notebook widget that uses Stixview to render STIX2 graphs.
 
 ## Motivation
 
@@ -14,12 +14,12 @@ CTI (Cyber Threat Intelligence) is very much about telling stories. Information 
 
 If intelligence provider cares about structured machine-readable CTI, the reports produced will be supplemented with [STIX2](https://oasis-open.github.io/cti-documentation/) bundles. There is a gap there between a story, narrated in a report, and a structured CTI snapshot, represented by a STIX2 bundle.
 
-The objective of [stixview](https://github.com/traut/stixview) library is to provide easily embeddable STIX2 graphs with necessary level of interactivity, so that CTI community can create informative and engaging stories.
+The objective of [Stixview](https://github.com/traut/stixview) library is to provide easily embeddable STIX2 graphs with necessary level of interactivity, so that CTI community can create informative and engaging stories.
 
 
 ## Demos
 
-To see stixview in action, take a look at these demo pages:
+To see Stixview in action, take a look at these demo pages:
 * [STIX2.1 demo](https://traut.github.io/stixview/dist/demos/stix21-demo.html) — sample graph with all STIX 2.1 objects.
 * [Storyline](https://traut.github.io/stixview/dist/demos/story.html) — multiple graphs per page, rendering selected entities from the same STIX bundle.
 * [Viewer](https://traut.github.io/stixview/dist/demos/viewer.html) — graph viewer with custom controls.
@@ -30,7 +30,7 @@ To see stixview in action, take a look at these demo pages:
 
 ## Usage
 
-To use stixview in a browser, download the latest build from `dist` directory (`stixview.bundle.js`) and reference it from your HTML file:
+To use Stixview in a browser, download the latest build from `dist` directory (`stixview.bundle.js`) and reference it from your HTML file:
 
 ```html
 <script src="stixview.bundle.js" type="text/javascript"></script>
@@ -46,7 +46,7 @@ or use [unpkg](https://unpkg.com) CDN service:
 ## API
 
 The library relies heavily on [data attributes](https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes).
-On page load, stixview will find all HTML elements with `data-stix-gist-id`, `data-stix-url` or `data-stix-allow-dragdrop` set and use these elements as graph holders.
+On page load, Stixview will find all HTML elements with `data-stix-gist-id`, `data-stix-url` or `data-stix-allow-dragdrop` set and use these elements as graph holders.
 
 Example of a graph holder div:
 ```html
@@ -62,7 +62,7 @@ Example of a graph holder div:
 
 Every holder element _must have_ one of `data-stix-gist-id`, `data-stix-url` or `data-stix-allow-dragdrop` set, otherwise it will not be detected by the library.
 
-stixview supports these `data-` attributes:
+Stixview supports these `data-` attributes:
 
 `stix-gist-id` — id of a gist that contains STIX2 bundle. if `gist-file` is not specified, first file will be used.
 
@@ -80,7 +80,7 @@ stixview supports these `data-` attributes:
 
 `show-idrefs` (`false` by default) — show placeholder objects for ids mentioned in the relationships but not present in a bundle.
 
-`graph-layout` (`cola` by default) — name of the graph layout algorythm. Supported algorythms are `cola` , `klay`, `cose-bilkent`, and `dagre`.
+`graph-layout` (`cola` by default) — name of the graph layout algorythm. Supported algorythms are `cola` , `klay`, `cose-bilkent`, `cise`, `grid` and `dagre`.
 
 `disable-mouse-zoom` (`false` by default) — disable mouse wheel zoom.
 
