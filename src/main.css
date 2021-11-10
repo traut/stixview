@@ -3,6 +3,7 @@
     overflow: auto;
     position: relative;
     font-size: 0.8em;
+    font-family: sans-serif;
     margin: 10px 0px;
 }
 
@@ -70,20 +71,25 @@
     bottom: 0;
     right: 0;
     width: 40%;
-    max-width: 600px;
+    max-width: 400px;
     position: absolute;
     padding: 10px;
     display: none;
-    overflow: scroll;
     border-width: 0px 0px 0px 1px;
     border-style: solid;
     border-color: #ddd;
     background-color: #f7f7f7;
+    overflow: scroll;
+}
+
+.sidebar p {
     line-height: 1.4em;
 }
 
 .sidebar .sidebar-title {
     word-wrap: break-word;
+    font-weight: normal;
+    font-size: 20pt;
 }
 
 .sidebar .sidebar-close-icon {
@@ -101,7 +107,6 @@
 
 .sidebar .sidebar-textarea {
     height: 400px;
-    max-height: 300px;  
     width: 100%;
 }
 

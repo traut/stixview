@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import _ from 'underscore';
 import {initGraph, loadGraph} from './viewer';
 import {isTrue, loadUrl, loadGist, loadUrlFromParam, readFile} from './utils.js';
@@ -16,7 +15,6 @@ function init(element, props, initCallback, loadCallback) {
     element.dataset.stixViewId = Math.random().toString(16).slice(2);
 
     const showIdrefs = isTrue(element.dataset.showIdrefs);
-
     const gistId = element.dataset.stixGistId;
     const gistFile = element.dataset.gistFile;
     const url = element.dataset.stixUrl;
@@ -85,7 +83,7 @@ function init(element, props, initCallback, loadCallback) {
                 function(error) {
                     graph.markAsNotLoading();
                     console.error(
-                        'can not load a url from a parameter ' + paramName,
+                        'Can not load a url from a parameter ' + paramName,
                         error);
                 }
             );
@@ -96,7 +94,7 @@ function init(element, props, initCallback, loadCallback) {
                 loadDataInGraph,
                 function(error) {
                     graph.markAsNotLoading();
-                    console.error('can not load gist ' + gistId, error);
+                    console.error('Can not load gist ' + gistId, error);
                 });
         },
         loadDataFromUrl: function(url) {
@@ -105,7 +103,7 @@ function init(element, props, initCallback, loadCallback) {
                 loadDataInGraph,
                 function(error) {
                     graph.markAsNotLoading();
-                    console.error('can not load url ' + url, error);
+                    console.error('Can not load url ' + url, error);
                 });
         },
     };
@@ -129,9 +127,8 @@ function init(element, props, initCallback, loadCallback) {
 
 function getMatchingCallbacks(callbacksMap, element) {
     const matching = [];
-    const $element = $(element);
     _.keys(callbacksMap).forEach(function(selector) {
-        if ($element.is(selector)) {
+        if (element.matches(selector)) {
             matching.push(callbacksMap[selector]);
         }
     });
@@ -148,19 +145,17 @@ function onLoad(selector, callback) {
 }
 
 if (typeof window !== 'undefined') {
-    $(function() {
-        $('[data-stix-gist-id],[data-stix-url],[data-stix-allow-dragdrop]').each(
-            function(i, element) {
-                init(element, null,
-                    function(graph) {
-                        getMatchingCallbacks(initCallbacks, element).forEach((f) => f(graph));
-                    },
-                    function(graph) {
-                        getMatchingCallbacks(loadCallbacks, element).forEach((f) => f(graph));
-                    }
-                );
-            }
-        );
+    window.addEventListener('load', () => {
+        const graphs = document.querySelectorAll(
+            '[data-stix-gist-id],[data-stix-url],[data-stix-allow-dragdrop]');
+        graphs.forEach((element) => {
+            init(
+                element,
+                null,
+                (graph) => getMatchingCallbacks(initCallbacks, element).forEach((f) => f(graph)),
+                (graph) => getMatchingCallbacks(loadCallbacks, element).forEach((f) => f(graph)),
+            );
+        });
     });
     window.stixview = {registry, onInit, onLoad, init};
 };

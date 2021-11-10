@@ -2,15 +2,15 @@
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>graph viewer - stixview</title>
+    <title>Graph Viewer - Stixview</title>
     <style type="text/css">
         body, html {
             height: 100%;
         }
 
         body {
-            font-family: sans-serif;
             font-size: 11pt;
+            font-family: sans-serif;
             line-height: 1.7em;
             margin: 0px;
             padding: 10px 20px 0px;
@@ -34,6 +34,7 @@
             <option value="cose-bilkent">cose-bilkent</option>
             <option value="klay">klay</option>
             <option value="dagre">dagre</option>
+            <option value="cise">cise</option>
             <option value="cola" selected>cola</option>
         </optgroup>
     </select>
@@ -45,14 +46,15 @@
     |
     <span class="tip">Cmd+Click for multiselect</span>
     |
-    <a href="?bundle=https://raw.githubusercontent.com/oasis-open/cti-stix2-json-schemas/master/examples/threat-reports/poisonivy.json">load an example</a> 
+    <a href="?bundle=https://gist.githubusercontent.com/traut/05d70be673133b0b4c938057fb38da04/raw/d673ee831d31fcef090b134e6397a896dfc41f7f/stix21-sample-bundle.json">load an example</a> 
     <input type="file" id="fileupload" style="float:right"/>
 </div>
 
 <div id="graph" 
      data-stix-allow-dragdrop=true
      data-show-sidebar=true
-     data-layout=cola
+     data-show-markings=true
+     data-graph-layout=cola
      data-graph-width='100%'
      data-graph-height='85vh'>
 </div>

@@ -1,5 +1,4 @@
 import _ from 'underscore';
-import $ from 'jquery';
 
 import cytoscape from 'cytoscape';
 
@@ -8,61 +7,12 @@ import euler from 'cytoscape-euler';
 import coseBilkent from 'cytoscape-cose-bilkent';
 import cola from 'cytoscape-cola';
 import dagre from 'cytoscape-dagre';
+import cise from 'cytoscape-cise';
 
 import autopanOnDrag from 'cytoscape-autopan-on-drag';
 
 import {readFile} from './utils.js';
-
-
-const indicatorIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/indicator.svg');
-const attackPatternIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/attack-pattern.svg');
-const campaignIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/campaign.svg');
-const courseOfActionIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/course-of-action.svg');
-const identityIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/identity.svg');
-const intrusionSetIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/intrusion-set.svg');
-const malwareIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/malware.svg');
-const observedDataIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/observed-data.svg');
-const opinionIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/opinion.svg');
-const relationshipIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/relationship.svg');
-const reportIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/report.svg');
-const sightingIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/sighting.svg');
-const threatActorIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/threat-actor.svg');
-const toolIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/tool.svg');
-const vulnerabilityIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/vulnerability.svg');
-
-const hypothesisIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/x-eclecticiq-hypothesis.svg');
-
-
-const unknownIconTmpl = `
-<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="event-icon">
-    <circle id="e" cx="100" cy="100" r="100" fill="#B99435"/>
-    <text
-        x="50%" y="150"
-        text-anchor="middle"
-        style="font: bold 150px sans-serif"
-        fill="white" stroke="white">
-        <%= letter %>
-    </text>
-</g>
-</svg>
-`;
+import {iconPerType, getPlaceholderIcon} from './icons.js';
 
 
 cytoscape.use(klay);
@@ -70,8 +20,9 @@ cytoscape.use(euler);
 cytoscape.use(coseBilkent);
 cytoscape.use(cola);
 cytoscape.use(dagre);
-autopanOnDrag(cytoscape);
+cytoscape.use(cise);
 
+autopanOnDrag(cytoscape);
 
 const DEFAULT_LAYOUT = 'cola';
 const NODE_WIDTH = 30;
@@ -103,111 +54,11 @@ const layoutProperties = {
 
 const cache = {};
 
-
-function encodeSvg(icon) {
-    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(icon);
-}
-
-const iconPerType = {
-    'threat-actor': {
-        color: '#d32b49',
-        shape: 'ellipse',
-        image: encodeSvg(threatActorIcon),
-    },
-    'tool': {
-        color: '#6661ab',
-        shape: 'star',
-        image: encodeSvg(toolIcon),
-    },
-    'vulnerability': {
-        color: '#eaca6b',
-        shape: 'diamond',
-        image: encodeSvg(vulnerabilityIcon),
-    },
-    'malware': {
-        color: '#6661ab',
-        shape: 'ellipse',
-        image: encodeSvg(malwareIcon),
-    },
-    'intrusion-set': {
-        color: '#396eb6',
-        shape: 'ellipse',
-        image: encodeSvg(intrusionSetIcon),
-    },
-    'indicator': {
-        color: '#e38850',
-        shape: 'pentagon',
-        image: encodeSvg(indicatorIcon),
-    },
-    'attack-pattern': {
-        color: '#6661ab',
-        shape: 'diamond',
-        image: encodeSvg(attackPatternIcon),
-    },
-    'course-of-action': {
-        color: '#7fbe82',
-        shape: 'ellipse',
-        image: encodeSvg(courseOfActionIcon),
-    },
-    'campaign': {
-        color: '#1d6775',
-        shape: 'star',
-        image: encodeSvg(campaignIcon),
-    },
-    'report': {
-        color: '#2d2b5f',
-        shape: 'ellipse',
-        image: encodeSvg(reportIcon),
-    },
-    'identity': {
-        color: '#9c9d9d',
-        shape: 'diamond',
-        image: encodeSvg(identityIcon),
-    },
-    'marking-definition': {
-        color: '#72d1fb',
-        shape: 'tag',
-    },
-    'sighting': {
-        color: '#383839',
-        shape: 'ellipse',
-        image: encodeSvg(sightingIcon),
-    },
-    'observed-data': {
-        color: '#AB558C',
-        shape: 'ellipse',
-        image: encodeSvg(observedDataIcon),
-    },
-    'relationship': {
-        color: '#31A9C1',
-        shape: 'ellipse',
-        image: encodeSvg(relationshipIcon),
-    },
-    // stix2.1
-    'opinion': {
-        color: '#881177',
-        shape: 'ellipse',
-        image: encodeSvg(opinionIcon),
-    },
-    // custom object
-    'x-eclecticiq-hypothesis': {
-        color: '#009688',
-        shape: 'ellipse',
-        image: encodeSvg(hypothesisIcon),
-    },
-    // idref placeholder node
-    'idref': {
-        color: '#ccc',
-        shape: 'octagon',
-    },
-};
-
-
 const TLP_HEX_COLORS = {
     red: '#ff0000',
     amber: '#ff8c00',
     green: '#7cfc00',
-    white: '#ccc',
+    white: '#f0ead6',
     none: '#008080',
 };
 
@@ -220,13 +71,12 @@ const DEFAULT_GRAPH_STYLE = [
             'width': NODE_WIDTH,
             'height': NODE_HEIGHT,
             'background-color': 'data(color)',
-            'background-width': '80%',
-            'background-height': '80%',
+            'background-width': '90%',
+            'background-height': '90%',
             'background-position-x': '50%',
             'text-valign': 'bottom',
             'text-halign': 'center',
             'label': '',
-            'color': 'rgba(0, 0, 0, 0.5)',
             'font-size': '10pt',
             'text-max-width': '300px',
             'text-wrap': 'ellipsis',
@@ -269,9 +119,7 @@ const DEFAULT_GRAPH_STYLE = [
             'width': 1,
             'opacity': 0.5,
             'label': 'data(label)',
-            // 'curve-style': 'haystack',
-            // 'haystack-radius': 0,
-            'curve-style': 'straight',
+            'curve-style': 'bezier', // 'straight',
             'line-color': '#bbb',
             'target-arrow-color': '#ccc',
             'target-arrow-shape': 'triangle',
@@ -309,21 +157,53 @@ const DEFAULT_GRAPH_STYLE = [
 ];
 
 
-function makeNodeElement(obj) {
-    let icon = iconPerType[obj.type];
+const NODE_NAME_FIELDS = [
+    'name',
+    'display_name',
+    'path',
+    'value',
+    'subject',
+    'command_line',
+    'key',
+    'av_result',
+    'region', 'country',
+    'abstract',
+    'opinion',
+    'type',
+];
 
-    if (!icon) {
-        icon = getUnknownIcon(obj.type);
+
+function getNodeLabel(obj) {
+    if (obj.type == 'marking-definition') {
+        if (obj.definition_type == 'tlp') {
+            return 'TLP: ' + obj.definition.tlp;
+        } else if (obj.definition_type == 'statement') {
+            return obj.definition.statement;
+        }
     }
 
+    for (let i = 0; i < NODE_NAME_FIELDS.length; i++) {
+        if (obj[NODE_NAME_FIELDS[i]]) {
+            return obj[NODE_NAME_FIELDS[i]];
+        }
+    }
+    return obj.type;
+}
+
+
+function makeNodeElement(obj) {
+    let icon = iconPerType[obj.type];
+    if (!icon) {
+        icon = getPlaceholderIcon(obj.type);
+    }
     if (obj.type === 'marking-definition') {
-        icon.color = TLP_HEX_COLORS[obj.definition.tlp];
+        icon.color = TLP_HEX_COLORS[obj.definition.tlp] || '#2E8BC0';
     }
     return {
         group: 'nodes',
         data: {
             id: obj.id,
-            label: obj.name,
+            label: getNodeLabel(obj),
             _raw: obj,
             shape: 'ellipse',
             type: obj.type,
@@ -368,13 +248,14 @@ function makeEdgesForRefs(node) {
     if (!entity) {
         return edges;
     }
-    _.forEach(entity, function (val, field) {
+
+    function makeEdgeIfRef(val, field) {
         // treat all fields ending with _ref(s) as a reference fields
         if (!field.endsWith('_ref') && !field.endsWith('_refs')) {
             return;
         }
         const refs = (typeof val === 'string') ? [val] : val;
-        _.forEach(refs, function(ref) {
+        refs.forEach((ref) => {
             const edge = makeEdgeElement({
                 id: 'rel-' + entity.id + '-' + ref,
                 source_ref: entity.id,
@@ -383,7 +264,21 @@ function makeEdgesForRefs(node) {
             });
             edges.push(edge);
         });
-    });
+    }
+
+    _.forEach(entity, makeEdgeIfRef);
+
+    // check for embedded refs in extensions
+    if (entity.extensions
+        && entity.extensions['archive-ext']
+        && entity.extensions['archive-ext']['contains_refs']) {
+        makeEdgeIfRef(entity.extensions['archive-ext']['contains_refs'], 'contains_refs');
+    }
+
+    if (entity.granular_markings) {
+        entity.granular_markings.forEach((r) => makeEdgeIfRef(r['marking_ref'], 'marking_ref'));
+    }
+
     return edges;
 }
 
@@ -412,30 +307,14 @@ function makeRelationshipNode(existingEdge) {
     return {node: newNode, edges: newEdges};
 }
 
-function getUnknownIcon(nodeType) {
-    const template = _.template(unknownIconTmpl);
-    const letter = nodeType.charAt(0).toUpperCase();
-    return {
-        color: '#B99435',
-        shape: 'ellipse',
-        image: encodeSvg(template({
-            nodeType: nodeType,
-            letter: letter})),
-    };
-}
-
-
-function showNodeDetails($sidebar, stixId, node) {
+function showNodeDetails(sidebar, stixId, node) {
     const entity = node._raw;
     const tmpl = _.template(`
         <img class='sidebar-type-icon'
              src='<%= icon %>'>
         <%= obj.type %>
         <span class='sidebar-close-icon'>×</span>
-        <h2 class='sidebar-title'><%- (obj.name || (
-            obj.definition_type == 'tlp' ?
-                (obj.definition_type + ': ' + obj.definition.tlp)
-                : obj.definition_type)) %></h2>
+        <h2 class='sidebar-title'><%- nodeLabel %></h2>
         <p><%= obj.description %></p>
         <p><strong>Labels:</strong> <%- (obj.labels || []).join(', ') %></p>
         <p><strong>External references:</strong>
@@ -452,19 +331,26 @@ function showNodeDetails($sidebar, stixId, node) {
             </textarea>
         </p>
     `);
-    $sidebar.html(tmpl({
+
+    sidebar.innerHTML = tmpl({
         obj: entity,
         elId: stixId,
-        icon: (iconPerType[entity.type] || getUnknownIcon(entity.type)).image}));
-    $sidebar.find('.sidebar-close-icon').on('click', function() {
-        $sidebar.css('display', 'none');
-    });
-    $sidebar.css('display', 'block');
+        nodeLabel: (
+            getNodeLabel(entity) || (
+                obj.definition_type == 'tlp'
+                    ? (obj.definition_type + ': ' + obj.definition.tlp) : obj.definition_type)),
+        icon: (iconPerType[entity.type] || getPlaceholderIcon(entity.type)).image}
+    );
+
+    sidebar.querySelector('.sidebar-close-icon').onclick = function() {
+        sidebar.style.display = 'none';
+    };
+    sidebar.style.display = 'block';
 }
 
 
 function initSidebar(cy, stixId) {
-    cy.nodes().on('click', function(e) {
+    cy.nodes().on('click', (e) => {
         e.preventDefault();
         const clickedNode = e.target.data();
         showNodeDetails(cy.sidebar, stixId, clickedNode);
@@ -473,37 +359,39 @@ function initSidebar(cy, stixId) {
 
 
 function downloadData(data) {
-    $('<a />', {
-        'download': data['id'] + '.json',
-        'href': 'data:application/json,' + encodeURIComponent(JSON.stringify(data, null, 4)),
-    }).appendTo('body').click(function() {
-        $(this).remove();
-    })[0].click();
+    const hiddenElement = document.createElement('a');
+    hiddenElement.href = (
+        'data:application/json,' + encodeURIComponent(JSON.stringify(data, null, 4)));
+    hiddenElement.download = data['id'] + '.json';
+    hiddenElement.target = '_blank';
+    hiddenElement.click();
 }
 
-function downloadPng(data) {
-    $('<a />', {
-        'download': 'graph.png',
-        'href': data,
-    }).appendTo('body').click(function() {
-        $(this).remove();
-    })[0].click();
+function downloadPng(data, img) {
+    const hiddenElement = document.createElement('a');
+    hiddenElement.href = img;
+    hiddenElement.download = 'graph-' + data['id'] + '.png';
+    hiddenElement.target = '_blank';
+    hiddenElement.click();
 }
 
 
 function initDownloadLinks(cy) {
-    const $elem = $(cy.element).find('.download-json');
-    $elem.off('click');
-    $elem.on('click', function(e) {
-        e.preventDefault();
-        downloadData(cy.raw_data);
-    });
-    const $elem2 = $(cy.element).find('.download-png');
-    $elem2.off('click');
-    $elem2.on('click', function(e) {
-        e.preventDefault();
-        downloadPng(cy.png());
-    });
+    const linkJsonDownload = cy.element.querySelector('.download-json');
+    if (linkJsonDownload) {
+        linkJsonDownload.onclick = function(e) {
+            e.preventDefault();
+            downloadData(cy.raw_data);
+        };
+    }
+
+    const linkPngDownload = cy.element.querySelector('.download-png');
+    if (linkPngDownload) {
+        linkPngDownload.onclick = function(e) {
+            e.preventDefault();
+            downloadPng(cy.raw_data, cy.png());
+        };
+    }
 }
 
 
@@ -568,7 +456,7 @@ function makeElements(bundle, showIdrefs, highlighted, hidden, showMarkings) {
     let nodes = [];
     const nodesMap = {};
     // create nodes for every non-relationship object in a bundle
-    _.forEach(bundle.objects, function (obj) {
+    bundle.objects.forEach((obj) => {
         if (obj.type === 'relationship') {
             return;
         }
@@ -588,7 +476,7 @@ function makeElements(bundle, showIdrefs, highlighted, hidden, showMarkings) {
     let edges = [];
     const edgesMap = {};
     // create edges for every relationship object in a bundle
-    _.forEach(bundle.objects, function (obj) {
+    bundle.objects.forEach((obj) => {
         if (obj.type != 'relationship') {
             return;
         }
@@ -607,17 +495,17 @@ function makeElements(bundle, showIdrefs, highlighted, hidden, showMarkings) {
     });
 
     // create nodes and edges for all references in fields
-    nodes.forEach(function(node) {
+    nodes.forEach((node) => {
         const refEdges = makeEdgesForRefs(node);
         edges = edges.concat(refEdges);
     });
 
     if (showIdrefs) {
         // create IDREF placeholder entities for hanging edges
-        const idrefEdges = _.filter(edges, function(e) {
-            return !(nodesMap[e.data.source] && nodesMap[e.data.target]);
-        });
-        idrefEdges.forEach(function(edge) {
+        const idrefEdges = edges.filter((e) => (
+            !(nodesMap[e.data.source] && nodesMap[e.data.target]))
+        );
+        idrefEdges.forEach((edge) => {
             const {newNodes, newEdges, edgesToDelete} = populateIdrefEdge(nodesMap, edgesMap, edge);
             edges = _.difference(edges, edgesToDelete);
             nodes = nodes.concat(newNodes);
@@ -625,10 +513,8 @@ function makeElements(bundle, showIdrefs, highlighted, hidden, showMarkings) {
         });
     } else {
         // Removing hanging entities
-        const connectedEdges = _.filter(edges, function(e) {
-            return (nodesMap[e.data.source] && nodesMap[e.data.target]);
-        });
-        edges = connectedEdges;
+        edges = edges.filter(
+            (e) => (nodesMap[e.data.source] && nodesMap[e.data.target]));
     }
     const elements = nodes.concat(edges);
     return elements;
@@ -638,60 +524,60 @@ function makeElements(bundle, showIdrefs, highlighted, hidden, showMarkings) {
 function initWrapper(element, options) {
     const {caption, width, height, hideFooter} = options;
 
-    const $elem = $(element);
-    $elem.addClass('stix-viewer-block');
-    $elem.append('<div class="stix-viewer"></div>');
+    element.classList.add('stix-viewer-block');
 
-    const $viewer = $elem.find('.stix-viewer');
-    $viewer.append('<div class="stix-graph"></div>');
+    const stixViewer = document.createElement('div');
+    stixViewer.classList.add('stix-viewer');
+    element.appendChild(stixViewer);
 
-    const $graph = $viewer.find('.stix-graph');
+    const stixGraph = document.createElement('div');
+    stixGraph.classList.add('stix-graph');
+    stixViewer.appendChild(stixGraph);
 
-    $elem.css({width: width});
-    $graph.css({
-        width: '100%',
-        height: height,
-    });
+    element.style.width = (isNaN(width) && width) || (width + 'px');
+    stixGraph.style.width = '100%';
+    stixGraph.style.height = (isNaN(height) && height) || (height + 'px');
 
     if (caption) {
-        const tmpl = _.template(`
-            <div class="viewer-header"><%= caption %></div>
-        `);
-        $elem.prepend(tmpl({'caption': caption}));
+        const captionDiv = document.createElement('div');
+        captionDiv.setAttribute('class', 'viewer-header');
+        captionDiv.innerText = caption;
+        element.insertBefore(captionDiv, element.firstChild);
     }
     if (!hideFooter) {
-        $elem.append(`
-            <div class='viewer-footer'>
-                made with <a href="https://traut.github.io/stixview/">stixview</a>
-                <span style="float:right">
-                    <a href="#" class="download-json">STIX2</a>&nbsp;
-                    <a href="#" class="download-png">PNG</a>
-                </span>
-            </div>
-        `);
+        const viewerFooter = document.createElement('div');
+        viewerFooter.setAttribute('class', 'viewer-footer');
+        viewerFooter.innerHTML = `
+            made with <a href="https://traut.github.io/stixview/">stixview</a>
+            <span style="float:right">
+                <a href="#" class="download-json">STIX2</a>&nbsp;
+                <a href="#" class="download-png">PNG</a>
+            </span>
+        `;
+        element.appendChild(viewerFooter);
     }
 }
 
 
 function initDragDrop(elem, callback) {
-    elem.addEventListener('dragover', function(e) {
+    elem.addEventListener('dragover', (e) => {
         e.stopPropagation();
         e.preventDefault();
-        $(elem).addClass('dragover-active');
+        elem.classList.add('dragover-active');
         e.dataTransfer.dropEffect = 'copy';
     });
-    elem.addEventListener('dragleave', function(e) {
+    elem.addEventListener('dragleave', (e) => {
         e.stopPropagation();
         e.preventDefault();
-        $(elem).removeClass('dragover-active');
+        elem.classList.remove('dragover-active');
     });
-    elem.addEventListener('drop', function(e) {
+    elem.addEventListener('drop', (e) => {
         e.stopPropagation();
         e.preventDefault();
-        $(elem).removeClass('dragover-active');
+        elem.classList.remove('dragover-active');
         const files = e.dataTransfer.files; // Array of all files
         if (files.length > 1) {
-            console.error('More than 1 file dropped, picking first one', files);
+            console.error('More than 1 file dropped, picking the first one', files);
         };
         if (files.lengh == 0) {
             return;
@@ -713,7 +599,7 @@ function initGraph(element, options, dataFetchCallback) {
         highlightedObjects,
         hiddenObjects,
         hideFooter,
-        showMarkings,
+        showMarkings=true,
         minZoom,
         maxZoom,
         graphWidth,
@@ -722,21 +608,17 @@ function initGraph(element, options, dataFetchCallback) {
         onClickNode,
     } = options;
 
-    const $elem = $(element);
     const width = graphWidth || element.clientWidth || 800;
     const height = graphHeight || 600;
 
     initWrapper(element, {width, height, caption, hideFooter});
 
-    const $viewer = $elem.find('.stix-viewer');
-    const $graph = $viewer.find('.stix-graph');
+    const viewer = element.querySelector('.stix-viewer');
 
     if (allowDragDrop) {
-        $graph.html(
+        viewer.querySelector('.stix-graph').innerHTML = (
             `<div class='viewer-placeholder'>Drag and drop STIX2 json file here</div>`);
-        initDragDrop(element, function(bundle) {
-            dataFetchCallback(bundle);
-        });
+        initDragDrop(element, (bundle) => dataFetchCallback(bundle));
     }
 
     const stixId = element.dataset.stixViewId;
@@ -746,7 +628,8 @@ function initGraph(element, options, dataFetchCallback) {
         userZoomingEnabled: !disableMouseZoom,
         userPanningEnabled: !disablePanning,
     });
-    cy.stixviewContainer = $graph;
+
+    cy.stixviewContainer = viewer.querySelector('.stix-graph');
     cy.minZoom(minZoom || 0.3);
     cy.maxZoom(maxZoom || 2.5);
 
@@ -755,12 +638,14 @@ function initGraph(element, options, dataFetchCallback) {
     cy.showMarkings = showMarkings;
 
     if (showSidebar) {
-        $viewer.append('<div class="sidebar"></div>');
-        cy.sidebar = $viewer.find('.sidebar');
+        const sidebar = document.createElement('div');
+        sidebar.setAttribute('class', 'sidebar');
+        viewer.appendChild(sidebar);
+        cy.sidebar = sidebar;
     }
 
     if (onClickNode) {
-        cy.on('click', 'node', function(e) {
+        cy.on('click', 'node', (e) => {
             e.preventDefault();
             const clickedNode = e.target.data();
             onClickNode(clickedNode);
@@ -774,7 +659,6 @@ function initGraph(element, options, dataFetchCallback) {
     const graph = {
         cy: cy,
         element: element,
-        $elem: $elem,
         options: options,
         runLayout: function(layoutName) {
             return runLayout(cy, layoutName);
@@ -795,16 +679,24 @@ function initGraph(element, options, dataFetchCallback) {
             cy.fit();
         },
         markAsLoading: function() {
-            $elem.addClass('loading');
-            $elem.find('.viewer-placeholder').remove();
+            element.classList.add('loading');
+            removePlaceholder(element);
         },
         markAsNotLoading: function() {
-            graph.$elem.removeClass('loading');
+            element.classList.remove('loading');
         },
     };
+
+    // ??? not the right place to fix mouse drift
+    cy.resize();
+
     return graph;
 }
 
+function removePlaceholder(element) {
+    const placeholder = element.querySelector('.viewer-placeholder');
+    if (placeholder && placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
+}
 
 function loadGraph(graph, bundle, showIdrefs, callback) {
     const cy = graph.cy;
@@ -813,7 +705,7 @@ function loadGraph(graph, bundle, showIdrefs, callback) {
 
     cy.mount(cy.stixviewContainer);
 
-    graph.$elem.find('.viewer-placeholder').remove();
+    removePlaceholder(graph.element);
 
     const graphElements = makeElements(
         bundle,
@@ -824,10 +716,7 @@ function loadGraph(graph, bundle, showIdrefs, callback) {
 
     cy.add(graphElements);
     cy.raw_data = bundle;
-
-    cy.once('layoutstop', function() {
-        callback && callback(graph);
-    });
+    cy.once('layoutstop', () => callback && callback(graph));
 
     if (!graph.options.disableLabels) {
         cy.style()
@@ -846,6 +735,13 @@ function loadGraph(graph, bundle, showIdrefs, callback) {
         initSidebar(cy, cy.stixId);
     }
 }
+
+//    function htmlToElement(html) {
+//        var template = document.createElement('template');
+//        html = html.trim(); // Never return a text node of whitespace as the result
+//        template.innerHTML = html;
+//        return template.content.firstChild;
+//    }
 
 
 export {initGraph, loadGraph};

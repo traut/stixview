@@ -1,6 +1,15 @@
-import $ from 'jquery';
-
 const urlCache = {};
+
+function fetch(url, onLoad, onError) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('get', url);
+    xhr.onload = function() {
+        onLoad(JSON.parse(xhr.responseText));
+    };
+    xhr.addEventListener('error', onError);
+    xhr.send();
+}
+
 
 function loadUrl(url) {
     const p = urlCache[url] || new Promise(function(resolve, reject) {
@@ -8,10 +17,7 @@ function loadUrl(url) {
             reject(new Error('No URL provided'));
             return;
         }
-        $.get(url).done(function(res) {
-            const bundle = JSON.parse(res);
-            resolve(bundle);
-        }).fail(reject);
+        fetch(url, resolve, reject);
     });
     if (url) {
         urlCache[url] = p;
@@ -23,11 +29,15 @@ function loadUrl(url) {
 function loadGist(id, file) {
     const url = 'https://api.github.com/gists/' + id;
     const p = urlCache[url] || new Promise(function(resolve, reject) {
-        $.get(url).done(function(res) {
-            file = file || Object.keys(res.files)[0];
-            const details = res.files[file];
-            resolve(JSON.parse(details.content));
-        }).fail(reject);
+        fetch(
+            url,
+            function(res) {
+                file = file || Object.keys(res.files)[0];
+                const details = res.files[file];
+                resolve(JSON.parse(details.content));
+            },
+            reject
+        );
     });
     urlCache[url] = p;
     return p;

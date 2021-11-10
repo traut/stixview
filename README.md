@@ -20,6 +20,7 @@ The objective of [stixview](https://github.com/traut/stixview) library is to pro
 ## Demos
 
 To see stixview in action, take a look at these demo pages:
+* [STIX2.1 demo](https://traut.github.io/stixview/dist/demos/stix21.html) — sample graph with all STIX 2.1 objects.
 * [Storyline](https://traut.github.io/stixview/dist/demos/story.html) — multiple graphs per page, rendering selected entities from the same STIX bundle.
 * [Viewer](https://traut.github.io/stixview/dist/demos/viewer.html) — graph viewer with custom controls.
 * [Drag-n-drop](https://traut.github.io/stixview/dist/demos/drag-n-drop.html) — graph views with drag-n-drop enabled.

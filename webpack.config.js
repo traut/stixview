@@ -15,7 +15,6 @@ const demoFiles = fs.readdirSync(DEMO_SRC_DIR).map(function(filename) {
     };
 });
 
-
 module.exports = {
     entry: './src/index.js',
     mode: 'production',
