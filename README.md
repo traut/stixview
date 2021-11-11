@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/stixview.svg)](https://badge.fury.io/js/stixview)
 
-[Stixview](https://github.com/traut/stixview) is an embeddable STIX2 graph library.
+[Stixview](https://github.com/traut/stixview) is a JS library for embeddable interactive STIX2 graphs.
 
 ![Stixview graph](https://raw.githubusercontent.com/traut/stixview/master/stixview-graph.png)
 
