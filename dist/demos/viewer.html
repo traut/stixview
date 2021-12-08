@@ -10,14 +10,11 @@
             padding: 10px 20px 0px;
         }
         a {
-            color: #aaa;
+            color: black;
         }
         .toolbar input#fileupload {
-            margin: 5px 0px 0px;
-        }
-        .toolbar .tip {
-            color: #ccc;
-        }</style><script src="https://unpkg.com/jquery"></script><script defer="defer" src="../stixview.bundle.js"></script></head><body><div class="toolbar"><select id="layout-select"><optgroup label="Layouts"><option value="cose-bilkent">cose-bilkent</option><option value="klay">klay</option><option value="dagre">dagre</option><option value="cise">cise</option><option value="cola" selected="selected">cola</option></optgroup></select> <button id="fit-graph">Fit graph</button> | <button id="toggle-tlp-as-tags">TLP as nodes / tags</button> | <button id="toggle-idrefs">Toggle idrefs</button> | <span class="tip">Cmd+Click for multiselect</span> | <a href="?bundle=https://gist.githubusercontent.com/traut/05d70be673133b0b4c938057fb38da04/raw/d673ee831d31fcef090b134e6397a896dfc41f7f/stix21-sample-bundle.json">load an example</a> <input type="file" id="fileupload" style="float:right"/></div><div id="graph" data-stix-allow-dragdrop="true" data-show-sidebar="true" data-graph-layout="cola" data-graph-width="100%" data-graph-height="85vh"></div><script>window.addEventListener("load", function(){
+            margin: 2px 0px 0px;
+        }</style><script src="https://unpkg.com/jquery"></script><script defer="defer" src="../stixview.bundle.js"></script></head><body><div class="toolbar"><select id="layout-select"><optgroup label="Layouts"><option value="cose-bilkent">cose-bilkent</option><option value="klay">klay</option><option value="dagre">dagre</option><option value="cise">cise</option><option value="cola" selected="selected">cola</option></optgroup></select> <button id="fit-graph">Fit graph</button> | <button id="toggle-tlp-as-tags">TLP as nodes / tags</button> <span style="float:right"><span style="margin: 5px 5px"><a href="?bundle=https://gist.githubusercontent.com/traut/05d70be673133b0b4c938057fb38da04/raw/d673ee831d31fcef090b134e6397a896dfc41f7f/stix21-sample-bundle.json">load an example</a> | </span><input type="file" id="fileupload" style="float:right"/></span></div><div id="graph" data-stix-allow-dragdrop="true" data-show-sidebar="true" data-graph-layout="cola" data-graph-width="100%" data-graph-height="85vh"></div><script>window.addEventListener("load", function(){
 
         window.stixview.onLoad("#graph", function(graph){
             console.info("Data loaded");
@@ -57,12 +54,5 @@
             });
 
             $("#fit-graph").on('click', () => graph.fit());
-
-            let showIdrefs = false;
-            $("#toggle-idrefs").on('click', function(e) {
-                e.preventDefault();
-                showIdrefs = !showIdrefs;
-                graph.reloadData({showIdrefs: showIdrefs});
-            });
         });
     });</script></body></html>
