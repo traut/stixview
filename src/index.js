@@ -1,7 +1,6 @@
 import _ from 'underscore';
 import {initGraph, loadGraph} from './viewer';
-import {isTrue, loadUrl, loadGist, loadUrlFromParam, readFile} from './utils.js';
-
+import {isTrue, withDefault, loadUrl, loadGist, loadUrlFromParam, readFile} from './utils.js';
 // import css for webpack to include
 /* eslint-disable-next-line no-unused-vars */
 import classes from './main.css';
@@ -10,101 +9,113 @@ const registry = {};
 const initCallbacks = {};
 const loadCallbacks = {};
 
-
-function init(element, props, initCallback, loadCallback) {
-    element.dataset.stixViewId = Math.random().toString(16).slice(2);
-
-    const showIdrefs = isTrue(element.dataset.showIdrefs);
+function init(element, initCallback, loadCallback, extraDataProps, extraViewProps) {
+    if (element in registry) {
+        return registry[element];
+    }
     const gistId = element.dataset.stixGistId;
     const gistFile = element.dataset.gistFile;
     const url = element.dataset.stixUrl;
 
-    const properties = {
-        allowDragDrop: isTrue(element.dataset.stixAllowDragdrop),
-        layout: element.dataset.graphLayout,
-        showIdrefs: showIdrefs,
-        showSidebar: isTrue(element.dataset.showSidebar),
-        caption: element.dataset.caption,
-        hideFooter: element.dataset.hideFooter,
-        disableMouseZoom: isTrue(element.dataset.disableMouseZoom),
-        disablePanning: isTrue(element.dataset.disablePanning),
-        disableLabels: isTrue(element.dataset.disableLabels),
-        showMarkings: isTrue(element.dataset.showMarkings),
-        graphWidth: element.dataset.graphWidth || element.clientWidth || 800,
-        graphHeight: element.dataset.graphHeight || 600,
+    // can be mutated via the `reloadData` func
+    let dataProps = {
+        showIdrefs: isTrue(withDefault(element.dataset.showIdrefs, false)),
         highlightedObjects: (
             element.dataset.highlightedObjects
                 ? element.dataset.highlightedObjects.split(',') : []),
         hiddenObjects: (
             element.dataset.hiddenObjects
                 ? element.dataset.hiddenObjects.split(',') : []),
-        minZoom: element.dataset.minZoom,
-        maxZoom: element.dataset.maxZoom,
-        ...props,
+        // fixme -- add withDefault?
+        showTlpAsTags: isTrue(withDefault(element.dataset.showTlpAsTags, true)),
+        showMarkingNodes: isTrue(withDefault(element.dataset.showMarkingNodes, true)),
+        ...extraDataProps,
     };
 
-    const loadDataInGraph = (bundle) => {
-        loadGraph(graph, bundle, showIdrefs, (graph) => {
-            graph.markAsNotLoading();
+    const viewProps = {
+        layout: element.dataset.graphLayout,
+        caption: element.dataset.caption,
+
+        showFooter: isTrue(withDefault(element.dataset.showFooter, true)),
+        showSidebar: isTrue(withDefault(element.dataset.showSidebar, true)),
+        showLabels: isTrue(withDefault(element.dataset.showLabels, true)),
+
+        allowDragDrop: isTrue(withDefault(element.dataset.stixAllowDragdrop, false)),
+        enableMouseZoom: isTrue(withDefault(element.dataset.enableMouseZoom, true)),
+        enablePanning: isTrue(withDefault(element.dataset.enablePanning, true)),
+
+        graphWidth: element.dataset.graphWidth || element.clientWidth || 800,
+        graphHeight: element.dataset.graphHeight || 600,
+        minZoom: element.dataset.minZoom,
+        maxZoom: element.dataset.maxZoom,
+
+        ...extraViewProps,
+    };
+
+    const loadDataInGraphCallback = (bundle) => {
+        loadGraph(graph, bundle, dataProps, (graph) => {
+            graph.toggleLoading(false);
             loadCallback && loadCallback(graph);
         });
     };
 
-    let graph = registry[element.dataset.stixViewId] = initGraph(
+    let graph = initGraph(
         element,
-        properties,
-        loadDataInGraph);
+        viewProps,
+        loadDataInGraphCallback);
 
     graph = {
         ...graph,
-        showIdrefs: function(callback) {
-            setTimeout(function() {
-                loadGraph(graph, graph.cy.raw_data, true, loadCallback);
-                callback && callback();
-            }, 20);
-        },
-        hideIdrefs: function(callback) {
-            setTimeout(function() {
-                loadGraph(graph, graph.cy.raw_data, false, loadCallback);
-                callback && callback();
-            }, 20);
-        },
-        loadData: loadDataInGraph,
+        loadData: loadDataInGraphCallback,
         loadDataFromFile: function(file) {
             if (file && file.type == 'application/json') {
-                graph.markAsLoading();
-                readFile(file, loadDataInGraph);
+                graph.toggleLoading(true);
+                readFile(file, loadDataInGraphCallback);
             }
         },
         loadDataFromParamUrl: function(paramName) {
-            graph.markAsLoading();
+            graph.toggleLoading(true);
             loadUrlFromParam(paramName).then(
-                loadDataInGraph,
-                function(error) {
-                    graph.markAsNotLoading();
-                    console.error(
-                        'Can not load a url from a parameter ' + paramName,
-                        error);
+                loadDataInGraphCallback,
+                (error) => {
+                    graph.toggleLoading(false);
+                    console.error('Can not load a url from a parameter ' + paramName, error);
                 }
             );
         },
         loadDataFromGist: function(gistId, gistFile) {
-            graph.markAsLoading();
+            graph.toggleLoading(true);
             loadGist(gistId, gistFile).then(
-                loadDataInGraph,
-                function(error) {
-                    graph.markAsNotLoading();
+                loadDataInGraphCallback,
+                (error) => {
+                    graph.toggleLoading(false);
                     console.error('Can not load gist ' + gistId, error);
-                });
+                }
+            );
         },
         loadDataFromUrl: function(url) {
-            graph.markAsLoading();
+            graph.toggleLoading(true);
             loadUrl(url).then(
-                loadDataInGraph,
-                function(error) {
-                    graph.markAsNotLoading();
-                    console.error('Can not load url ' + url, error);
-                });
+                loadDataInGraphCallback,
+                (error) => {
+                    graph.toggleLoading(false);
+                    console.error('Can not load data from url ' + url, error);
+                }
+            );
+        },
+        reloadData: function(extraDataProps, bundle, callback) {
+            setTimeout(() => {
+                bundle = bundle || graph.cy.bundle;
+                dataProps = {
+                    ...dataProps,
+                    ...extraDataProps,
+                };
+                loadGraph(graph, bundle, dataProps, loadCallback);
+                callback && callback();
+            }, 20);
+        },
+        setSidebarRender: function(sidebarRender) {
+            graph.setSidebarRender(sidebarRender);
         },
     };
 
@@ -119,8 +130,13 @@ function init(element, props, initCallback, loadCallback) {
                     graph.loadDataFromUrl(url);
                 }
             },
-            20);
+            20
+        );
     }
+
+    element.dataset.stixViewId = Math.random().toString(16).slice(2);
+    registry[element] = graph;
+
     return graph;
 }
 
@@ -151,7 +167,6 @@ if (typeof window !== 'undefined') {
         graphs.forEach((element) => {
             init(
                 element,
-                null,
                 (graph) => getMatchingCallbacks(initCallbacks, element).forEach((f) => f(graph)),
                 (graph) => getMatchingCallbacks(loadCallbacks, element).forEach((f) => f(graph)),
             );
@@ -161,3 +176,5 @@ if (typeof window !== 'undefined') {
 };
 
 export {registry, onInit, onLoad, init};
+
+

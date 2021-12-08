@@ -30,6 +30,7 @@
   "homepage": "https://github.com/traut/stixview",
   "unpkg": "dist/stixview.bundle.js",
   "dependencies": {
+    "@popperjs/core": "^2.11.0",
     "cytoscape": "^3.20",
     "cytoscape-autopan-on-drag": "^2.2.0",
     "cytoscape-cise": "^1.0.0",
@@ -38,6 +39,7 @@
     "cytoscape-dagre": "^2.3.2",
     "cytoscape-euler": "^1.2.2",
     "cytoscape-klay": "^3.1.4",
+    "cytoscape-popper": "^2.0.0",
     "eslint-utils": "^3.0.0",
     "serialize-javascript": "^6.0.0",
     "svg-inline-loader": "^0.8.2",

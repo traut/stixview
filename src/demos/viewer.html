@@ -40,7 +40,7 @@
     </select>
     <button id="fit-graph">Fit graph</button>
     |
-    <button id="toggle-labels">Toggle labels</button>
+    <button id="toggle-tlp-as-tags">TLP as nodes / tags</button>
     |
     <button id="toggle-idrefs">Toggle idrefs</button>
     |
@@ -53,7 +53,6 @@
 <div id="graph" 
      data-stix-allow-dragdrop=true
      data-show-sidebar=true
-     data-show-markings=true
      data-graph-layout=cola
      data-graph-width='100%'
      data-graph-height='85vh'>
@@ -92,33 +91,20 @@
                 document.getElementById('layout-select').value = e.target.value;
             });
 
-            let showLabels = true;
-            $("#toggle-labels").on('click', function(e) {
+            let tlpAsTags = true;
+            $("#toggle-tlp-as-tags").on('click', function(e) {
                 e.preventDefault();
-                if (!showLabels) {
-                    graph.enableLabels();
-                    showLabels = true;
-                } else {
-                    graph.disableLabels();
-                    showLabels = false;
-                }
+                tlpAsTags = !tlpAsTags;
+                graph.reloadData({showTlpAsTags: tlpAsTags});
             });
-            $("#fit-graph").on('click', function() { graph.fit() });
+
+            $("#fit-graph").on('click', () => graph.fit());
 
             let showIdrefs = false;
             $("#toggle-idrefs").on('click', function(e) {
                 e.preventDefault();
-                if (!showIdrefs) {
-                    graph.showIdrefs(function() {
-                        console.info("show-idrefs done");
-                    });
-                    showIdrefs = true;
-                } else {
-                    graph.hideIdrefs(function() {
-                        console.info("hide-idrefs done");
-                    });
-                    showIdrefs = false;
-                }
+                showIdrefs = !showIdrefs;
+                graph.reloadData({showIdrefs: showIdrefs});
             });
         });
     });

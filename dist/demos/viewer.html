@@ -17,7 +17,7 @@
         }
         .toolbar .tip {
             color: #ccc;
-        }</style><script src="https://unpkg.com/jquery"></script><script defer="defer" src="../stixview.bundle.js"></script></head><body><div class="toolbar"><select id="layout-select"><optgroup label="Layouts"><option value="cose-bilkent">cose-bilkent</option><option value="klay">klay</option><option value="dagre">dagre</option><option value="cise">cise</option><option value="cola" selected="selected">cola</option></optgroup></select> <button id="fit-graph">Fit graph</button> | <button id="toggle-labels">Toggle labels</button> | <button id="toggle-idrefs">Toggle idrefs</button> | <span class="tip">Cmd+Click for multiselect</span> | <a href="?bundle=https://gist.githubusercontent.com/traut/05d70be673133b0b4c938057fb38da04/raw/d673ee831d31fcef090b134e6397a896dfc41f7f/stix21-sample-bundle.json">load an example</a> <input type="file" id="fileupload" style="float:right"/></div><div id="graph" data-stix-allow-dragdrop="true" data-show-sidebar="true" data-show-markings="true" data-graph-layout="cola" data-graph-width="100%" data-graph-height="85vh"></div><script>window.addEventListener("load", function(){
+        }</style><script src="https://unpkg.com/jquery"></script><script defer="defer" src="../stixview.bundle.js"></script></head><body><div class="toolbar"><select id="layout-select"><optgroup label="Layouts"><option value="cose-bilkent">cose-bilkent</option><option value="klay">klay</option><option value="dagre">dagre</option><option value="cise">cise</option><option value="cola" selected="selected">cola</option></optgroup></select> <button id="fit-graph">Fit graph</button> | <button id="toggle-tlp-as-tags">TLP as nodes / tags</button> | <button id="toggle-idrefs">Toggle idrefs</button> | <span class="tip">Cmd+Click for multiselect</span> | <a href="?bundle=https://gist.githubusercontent.com/traut/05d70be673133b0b4c938057fb38da04/raw/d673ee831d31fcef090b134e6397a896dfc41f7f/stix21-sample-bundle.json">load an example</a> <input type="file" id="fileupload" style="float:right"/></div><div id="graph" data-stix-allow-dragdrop="true" data-show-sidebar="true" data-graph-layout="cola" data-graph-width="100%" data-graph-height="85vh"></div><script>window.addEventListener("load", function(){
 
         window.stixview.onLoad("#graph", function(graph){
             console.info("Data loaded");
@@ -49,33 +49,20 @@
                 document.getElementById('layout-select').value = e.target.value;
             });
 
-            let showLabels = true;
-            $("#toggle-labels").on('click', function(e) {
+            let tlpAsTags = true;
+            $("#toggle-tlp-as-tags").on('click', function(e) {
                 e.preventDefault();
-                if (!showLabels) {
-                    graph.enableLabels();
-                    showLabels = true;
-                } else {
-                    graph.disableLabels();
-                    showLabels = false;
-                }
+                tlpAsTags = !tlpAsTags;
+                graph.reloadData({showTlpAsTags: tlpAsTags});
             });
-            $("#fit-graph").on('click', function() { graph.fit() });
+
+            $("#fit-graph").on('click', () => graph.fit());
 
             let showIdrefs = false;
             $("#toggle-idrefs").on('click', function(e) {
                 e.preventDefault();
-                if (!showIdrefs) {
-                    graph.showIdrefs(function() {
-                        console.info("show-idrefs done");
-                    });
-                    showIdrefs = true;
-                } else {
-                    graph.hideIdrefs(function() {
-                        console.info("hide-idrefs done");
-                    });
-                    showIdrefs = false;
-                }
+                showIdrefs = !showIdrefs;
+                graph.reloadData({showIdrefs: showIdrefs});
             });
         });
     });</script></body></html>

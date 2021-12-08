@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>TLP tags and custom sidebar - Stixview</title>
+</head>
+<body>
+<div id='graph-element'
+     data-stix-gist-id="ee9e0117cac06e5014ab7838776d4d9c"
+     data-stix-allow-dragdrop=false
+     data-show-idrefs=false
+     data-show-sidebar=true
+     data-show-footer=true
+     data-show-tlp-as-tags=true
+     data-graph-layout=cise
+     data-caption='TLP tags and custom sidebar renderer'
+     data-graph-width='100%'
+     data-graph-height='85vh'
+>
+</div>
+</body>
+<script>
+    window.addEventListener("load", function(){
+        const element = document.getElementById('graph-element');
+        const graph = window.stixview.init(
+                element,
+                null,
+                () => {
+                    console.info("Graph loaded");
+                },
+                {}, // no additional data properties
+                {
+                    sidebarRender: function(node) {
+                        return "Hi, " + node.raw.type + "! <span class='sidebar-close-icon'>×</span>";
+                    }
+                }
+            );
+    });
+</script>
+</html>

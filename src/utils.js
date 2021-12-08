@@ -51,8 +51,12 @@ function loadUrlFromParam(paramName) {
 }
 
 
+function withDefault(value, defaultValue) {
+    return (value == null) ? defaultValue : value;
+}
+
 function isTrue(prop) {
-    return (prop != null && prop != 'false');
+    return (prop && prop != 'false' && prop != 'False');
 }
 
 
@@ -68,4 +72,29 @@ function readFile(file, callback) {
 }
 
 
-export {loadUrl, loadGist, isTrue, loadUrlFromParam, readFile};
+function mostRelaxedTlp(tlpMarkings) {
+    if (tlpMarkings.length == 0) {
+        return;
+    }
+    // STIX2 TLP spectrum
+    const tlp = ['white', 'green', 'amber', 'red'];
+    const smallestIndex = (
+        tlpMarkings
+            .map((m) => tlp.indexOf(m.value.toLowerCase()))
+            .filter((i) => i > -1)
+            .sort()[0]);
+    const widestTlp = tlp[smallestIndex];
+    const marking = tlpMarkings.filter((m) => m.value.toLowerCase() == widestTlp)[0];
+    return marking;
+}
+
+
+export {
+    loadUrl,
+    loadGist,
+    isTrue,
+    loadUrlFromParam,
+    readFile,
+    withDefault,
+    mostRelaxedTlp,
+};

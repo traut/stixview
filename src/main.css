@@ -48,7 +48,7 @@
     color: #586069;
 }
 
-.viewer-placeholder {
+.stix-viewer .viewer-placeholder {
     top: 45%;
     position: relative;
     font-family: sans-serif;
@@ -58,15 +58,15 @@
     text-align: center;
 }
 
-.dragover-active {
+.stix-viewer-block .dragover-active {
     background-color: #eee;
 }
 
-.loading {
+.stix-viewer-block .loading {
     background-color: #f7f7f7; 
 }
 
-.sidebar {
+.stix-viewer-block .sidebar {
     top: 0px;
     bottom: 0;
     right: 0;
@@ -80,41 +80,86 @@
     border-color: #ddd;
     background-color: #f7f7f7;
     overflow: scroll;
+    z-index: 9999;
 }
 
-.sidebar p {
+.stix-viewer-block .sidebar p {
     line-height: 1.4em;
 }
 
-.sidebar .sidebar-title {
+.stix-viewer-block .sidebar .sidebar-title {
     word-wrap: break-word;
     font-weight: normal;
     font-size: 20pt;
 }
 
-.sidebar .sidebar-close-icon {
+.stix-viewer-block .sidebar .sidebar-close-icon {
     float: right;
     font-size: 20pt;
     padding: 0px 10px;
     cursor: pointer;
 }
 
-.sidebar img.sidebar-type-icon {
+.stix-viewer-block .sidebar img.sidebar-type-icon {
     height: 30px;
     vertical-align: middle;
     margin-right: 5px;
 }
 
-.sidebar .sidebar-textarea {
+.stix-viewer-block .sidebar .sidebar-textarea {
     height: 400px;
     width: 100%;
 }
 
-.viewer-footer {
+.stix-viewer-block .viewer-footer {
     color: #586069;
     background-color: #f7f7f7;
 }
 
 .stix-viewer-block .viewer-footer a {
     color: #586069;
+}
+
+.marking-tag {
+    font-size: 0.8em;
+    font-family: sans-serif;
+    padding: 0px 2px;
+    border-radius: 2px;
+    border-width: 1px;
+    border-style: solid;
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+}
+
+.marking-tag-tlp-white {
+    color: black;
+    background-color: white;
+    border-color: black;
+}
+
+.marking-tag-tlp-green {
+    color: white;
+    background-color: green;
+    border-color: green;
+}
+
+.marking-tag-tlp-amber {
+    color: white;
+    background-color: orange;
+    border-color: orange;
+}
+
+.marking-tag-tlp-red {
+    color: white;
+    background-color: red;
+    border-color: red;
+}
+
+.marking-tag-tlp-custom {
+    color: black;
+    background-color: white;
+    border-color: black;
 }

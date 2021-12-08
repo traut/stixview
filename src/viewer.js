@@ -1,5 +1,3 @@
-import _ from 'underscore';
-
 import cytoscape from 'cytoscape';
 
 import klay from 'cytoscape-klay';
@@ -8,11 +6,13 @@ import coseBilkent from 'cytoscape-cose-bilkent';
 import cola from 'cytoscape-cola';
 import dagre from 'cytoscape-dagre';
 import cise from 'cytoscape-cise';
+import popper from 'cytoscape-popper';
 
 import autopanOnDrag from 'cytoscape-autopan-on-drag';
 
 import {readFile} from './utils.js';
-import {iconPerType, getPlaceholderIcon} from './icons.js';
+import {bundleToGraphElements} from './data.js';
+import {renderSidebarContent} from './sidebar.js';
 
 
 cytoscape.use(klay);
@@ -22,13 +22,15 @@ cytoscape.use(cola);
 cytoscape.use(dagre);
 cytoscape.use(cise);
 
+cytoscape.use(popper);
+
 autopanOnDrag(cytoscape);
 
 const DEFAULT_LAYOUT = 'cola';
 const NODE_WIDTH = 30;
 const NODE_HEIGHT = 30;
 
-const layoutProperties = {
+const LAYOUT_PROPS = {
     'euler': {
         pull: 0.006,
         mass: (node) => 10,
@@ -51,17 +53,6 @@ const layoutProperties = {
         animate: false,
     },
 };
-
-const cache = {};
-
-const TLP_HEX_COLORS = {
-    red: '#ff0000',
-    amber: '#ff8c00',
-    green: '#7cfc00',
-    white: '#f0ead6',
-    none: '#008080',
-};
-
 
 const DEFAULT_GRAPH_STYLE = [
     {
@@ -156,204 +147,21 @@ const DEFAULT_GRAPH_STYLE = [
     },
 ];
 
-
-const NODE_NAME_FIELDS = [
-    'name',
-    'display_name',
-    'path',
-    'value',
-    'subject',
-    'command_line',
-    'key',
-    'av_result',
-    'region', 'country',
-    'abstract',
-    'opinion',
-    'type',
-];
-
-
-function getNodeLabel(obj) {
-    if (obj.type == 'marking-definition') {
-        if (obj.definition_type == 'tlp') {
-            return 'TLP: ' + obj.definition.tlp;
-        } else if (obj.definition_type == 'statement') {
-            return obj.definition.statement;
-        }
-    }
-
-    for (let i = 0; i < NODE_NAME_FIELDS.length; i++) {
-        if (obj[NODE_NAME_FIELDS[i]]) {
-            return obj[NODE_NAME_FIELDS[i]];
-        }
-    }
-    return obj.type;
-}
-
-
-function makeNodeElement(obj) {
-    let icon = iconPerType[obj.type];
-    if (!icon) {
-        icon = getPlaceholderIcon(obj.type);
-    }
-    if (obj.type === 'marking-definition') {
-        icon.color = TLP_HEX_COLORS[obj.definition.tlp] || '#2E8BC0';
-    }
-    return {
-        group: 'nodes',
-        data: {
-            id: obj.id,
-            label: getNodeLabel(obj),
-            _raw: obj,
-            shape: 'ellipse',
-            type: obj.type,
-            ...icon,
-        },
-        selectable: true,
-        grabbable: true,
-        classes: [obj.type, 'icon-' + obj.type],
-    };
-}
-
-
-function makeEdgeElement(obj) {
-    return {
-        group: 'edges',
-        data: {
-            id: obj.id,
-            source: obj.source_ref,
-            target: obj.target_ref,
-            label: obj.relationship_type,
-            arrow: 'triangle',
-            _raw: obj,
-        },
-        classes: ['autorotate'],
-    };
-}
-
-
-function makeIdrefNodeElement(ref, originalRef) {
-    return makeNodeElement({
-        id: ref,
-        type: 'idref',
-        name: 'IDREF ' + ref,
-        original_relationship: originalRef,
-    });
-}
-
-
-function makeEdgesForRefs(node) {
-    const entity = node.data._raw;
-    const edges = [];
-    if (!entity) {
-        return edges;
-    }
-
-    function makeEdgeIfRef(val, field) {
-        // treat all fields ending with _ref(s) as a reference fields
-        if (!field.endsWith('_ref') && !field.endsWith('_refs')) {
-            return;
-        }
-        const refs = (typeof val === 'string') ? [val] : val;
-        refs.forEach((ref) => {
-            const edge = makeEdgeElement({
-                id: 'rel-' + entity.id + '-' + ref,
-                source_ref: entity.id,
-                target_ref: ref,
-                relationship_type: field,
-            });
-            edges.push(edge);
-        });
-    }
-
-    _.forEach(entity, makeEdgeIfRef);
-
-    // check for embedded refs in extensions
-    if (entity.extensions
-        && entity.extensions['archive-ext']
-        && entity.extensions['archive-ext']['contains_refs']) {
-        makeEdgeIfRef(entity.extensions['archive-ext']['contains_refs'], 'contains_refs');
-    }
-
-    if (entity.granular_markings) {
-        entity.granular_markings.forEach((r) => makeEdgeIfRef(r['marking_ref'], 'marking_ref'));
-    }
-
-    return edges;
-}
-
-
-function makeRelationshipNode(existingEdge) {
-    const newNode = makeNodeElement({
-        id: existingEdge.data.id,
-        name: existingEdge.data.name || existingEdge.data.id,
-        type: 'relationship',
-        _raw: existingEdge.data,
-    });
-    const newEdges = [
-        makeEdgeElement({
-            id: 'rel-' + existingEdge.data.source + '-' + newNode.data.id,
-            source_ref: existingEdge.data.source,
-            target_ref: newNode.data.id,
-            relationship_type: existingEdge.data.label,
-        }),
-        makeEdgeElement({
-            id: 'rel-' + newNode.data.id + '-' + existingEdge.data.targer,
-            source_ref: newNode.data.id,
-            target_ref: existingEdge.data.target,
-            relationship_type: existingEdge.data.label,
-        }),
-    ];
-    return {node: newNode, edges: newEdges};
-}
-
-function showNodeDetails(sidebar, stixId, node) {
-    const entity = node._raw;
-    const tmpl = _.template(`
-        <img class='sidebar-type-icon'
-             src='<%= icon %>'>
-        <%= obj.type %>
-        <span class='sidebar-close-icon'>×</span>
-        <h2 class='sidebar-title'><%- nodeLabel %></h2>
-        <p><%= obj.description %></p>
-        <p><strong>Labels:</strong> <%- (obj.labels || []).join(', ') %></p>
-        <p><strong>External references:</strong>
-            <%= (obj.external_references || [])
-                .map((x) => ((x.description ? x.description + ": ": "")
-                             + (x.url || x.source_name || "")))
-                .join('; ') %>
-        </p>
-        <p><strong>Created</strong>: <%= obj.created %></p>
-        <p><strong>ID:</strong> <%= obj.id %></p>
-        <p>
-            <strong>JSON:</strong><br/>
-            <textarea class='sidebar-textarea' readonly='yes'><%- JSON.stringify(obj, null, 4) %>
-            </textarea>
-        </p>
-    `);
-
-    sidebar.innerHTML = tmpl({
-        obj: entity,
-        elId: stixId,
-        nodeLabel: (
-            getNodeLabel(entity) || (
-                obj.definition_type == 'tlp'
-                    ? (obj.definition_type + ': ' + obj.definition.tlp) : obj.definition_type)),
-        icon: (iconPerType[entity.type] || getPlaceholderIcon(entity.type)).image}
-    );
-
-    sidebar.querySelector('.sidebar-close-icon').onclick = function() {
-        sidebar.style.display = 'none';
-    };
-    sidebar.style.display = 'block';
-}
-
-
-function initSidebar(cy, stixId) {
+function addSidebarListener(cy) {
     cy.nodes().on('click', (e) => {
         e.preventDefault();
-        const clickedNode = e.target.data();
-        showNodeDetails(cy.sidebar, stixId, clickedNode);
+        const node = e.target.data();
+
+        cy.sidebar.innerHTML = (
+            cy.sidebarRender ? cy.sidebarRender(node) : renderSidebarContent(node));
+
+        const closeIcon = cy.sidebar.querySelector('.sidebar-close-icon');
+        if (closeIcon) {
+            closeIcon.onclick = () => {
+                cy.sidebar.style.display = 'none';
+            };
+        }
+        cy.sidebar.style.display = 'block';
     });
 }
 
@@ -381,7 +189,7 @@ function initDownloadLinks(cy) {
     if (linkJsonDownload) {
         linkJsonDownload.onclick = function(e) {
             e.preventDefault();
-            downloadData(cy.raw_data);
+            downloadData(cy.bundle);
         };
     }
 
@@ -389,7 +197,7 @@ function initDownloadLinks(cy) {
     if (linkPngDownload) {
         linkPngDownload.onclick = function(e) {
             e.preventDefault();
-            downloadPng(cy.raw_data, cy.png());
+            downloadPng(cy.bundle, cy.png());
         };
     }
 }
@@ -398,7 +206,7 @@ function initDownloadLinks(cy) {
 function runLayout(cy, layoutName) {
     const layout = cy.layout({
         name: layoutName,
-        ...layoutProperties[layoutName],
+        ...LAYOUT_PROPS[layoutName],
     });
     layout.run();
     setTimeout(function() {
@@ -407,122 +215,8 @@ function runLayout(cy, layoutName) {
     cy.layoutName = layoutName;
 }
 
-
-function populateIdrefEdge(nodesMap, edgesMap, edge) {
-    let source = nodesMap[edge.data.source];
-    let target = nodesMap[edge.data.target];
-
-    const newNodes = [];
-    const edgesToDelete = [];
-    let newEdges = [];
-
-    if (!source) {
-        // a relationship to a relationship
-        if (edge.data.source.startsWith('relationship')) {
-            const existingEdge = edgesMap[edge.data.source];
-            if (existingEdge) {
-                edgesToDelete.push(existingEdge);
-                const {node, edges} = makeRelationshipNode(existingEdge);
-                source = node;
-                newEdges = newEdges.concat(edges);
-            }
-        }
-        source = source || makeIdrefNodeElement(edge.data.source, edge.data._raw);
-        newNodes.push(source);
-    }
-    if (!target) {
-        // a relationship to a relationship
-        if (edge.data.target.startsWith('relationship')) {
-            const existingEdge = edgesMap[edge.data.target];
-            if (existingEdge) {
-                edgesToDelete.push(existingEdge);
-                const {node, edges} = makeRelationshipNode(existingEdge);
-                target = node;
-                newEdges = newEdges.concat(edges);
-            }
-        }
-        target = target || makeIdrefNodeElement(edge.data.target, edge.data._raw);
-        newNodes.push(target);
-    }
-    return {
-        newNodes: newNodes,
-        newEdges: newEdges,
-        edgesToDelete: edgesToDelete,
-    };
-};
-
-
-function makeElements(bundle, showIdrefs, highlighted, hidden, showMarkings) {
-    let nodes = [];
-    const nodesMap = {};
-    // create nodes for every non-relationship object in a bundle
-    bundle.objects.forEach((obj) => {
-        if (obj.type === 'relationship') {
-            return;
-        }
-        const node = makeNodeElement(obj);
-        if ((highlighted.length > 0 && highlighted.indexOf(node.data.id) == -1)
-            || (hidden.length > 0 && hidden.indexOf(node.data.id) > -1)) {
-            // skip hidden node
-            return;
-        }
-        if (!showMarkings && obj.type === 'marking-definition') {
-            return;
-        }
-        nodes.push(node);
-        nodesMap[node.data.id] = node;
-    });
-
-    let edges = [];
-    const edgesMap = {};
-    // create edges for every relationship object in a bundle
-    bundle.objects.forEach((obj) => {
-        if (obj.type != 'relationship') {
-            return;
-        }
-        const edge = makeEdgeElement(obj);
-        if ((highlighted.length > 0
-                && (highlighted.indexOf(edge.data.source) == -1
-                    || highlighted.indexOf(edge.data.target) == -1))
-            || (hidden.length > 0
-                && (hidden.indexOf(edge.data.source) > -1
-                    || highlighted.indexOf(edge.data.target) > -1))) {
-            // skip relationship if one of nodes was hidden
-            return;
-        }
-        edges.push(edge);
-        edgesMap[edge.data.id] = edge;
-    });
-
-    // create nodes and edges for all references in fields
-    nodes.forEach((node) => {
-        const refEdges = makeEdgesForRefs(node);
-        edges = edges.concat(refEdges);
-    });
-
-    if (showIdrefs) {
-        // create IDREF placeholder entities for hanging edges
-        const idrefEdges = edges.filter((e) => (
-            !(nodesMap[e.data.source] && nodesMap[e.data.target]))
-        );
-        idrefEdges.forEach((edge) => {
-            const {newNodes, newEdges, edgesToDelete} = populateIdrefEdge(nodesMap, edgesMap, edge);
-            edges = _.difference(edges, edgesToDelete);
-            nodes = nodes.concat(newNodes);
-            edges = edges.concat(newEdges);
-        });
-    } else {
-        // Removing hanging entities
-        edges = edges.filter(
-            (e) => (nodesMap[e.data.source] && nodesMap[e.data.target]));
-    }
-    const elements = nodes.concat(edges);
-    return elements;
-};
-
-
 function initWrapper(element, options) {
-    const {caption, width, height, hideFooter} = options;
+    const {caption, width, height, showFooter} = options;
 
     element.classList.add('stix-viewer-block');
 
@@ -544,7 +238,7 @@ function initWrapper(element, options) {
         captionDiv.innerText = caption;
         element.insertBefore(captionDiv, element.firstChild);
     }
-    if (!hideFooter) {
+    if (showFooter) {
         const viewerFooter = document.createElement('div');
         viewerFooter.setAttribute('class', 'viewer-footer');
         viewerFooter.innerHTML = `
@@ -556,6 +250,7 @@ function initWrapper(element, options) {
         `;
         element.appendChild(viewerFooter);
     }
+    return element;
 }
 
 
@@ -588,31 +283,33 @@ function initDragDrop(elem, callback) {
 }
 
 
-function initGraph(element, options, dataFetchCallback) {
+function initGraph(element, viewProps, dataFetchCallback) {
     const {
-        allowDragDrop,
-        caption,
+        // default view settings
         layout,
+        caption,
+        showFooter,
         showSidebar,
-        disableMouseZoom,
-        disablePanning,
-        highlightedObjects,
-        hiddenObjects,
-        hideFooter,
-        showMarkings=true,
-        minZoom,
-        maxZoom,
+        showLabels,
+
+        allowDragDrop,
+        enableMouseZoom,
+        enablePanning,
         graphWidth,
         graphHeight,
-        style,
+        minZoom,
+        maxZoom,
+        // extra settings
+        graphStyle,
+
         onClickNode,
-    } = options;
+        sidebarRender,
+    } = viewProps;
 
     const width = graphWidth || element.clientWidth || 800;
     const height = graphHeight || 600;
 
-    initWrapper(element, {width, height, caption, hideFooter});
-
+    element = initWrapper(element, {width, height, caption, showFooter});
     const viewer = element.querySelector('.stix-viewer');
 
     if (allowDragDrop) {
@@ -621,21 +318,15 @@ function initGraph(element, options, dataFetchCallback) {
         initDragDrop(element, (bundle) => dataFetchCallback(bundle));
     }
 
-    const stixId = element.dataset.stixViewId;
-
-    const cy = cache[stixId] = cytoscape({
-        style: style || DEFAULT_GRAPH_STYLE,
-        userZoomingEnabled: !disableMouseZoom,
-        userPanningEnabled: !disablePanning,
+    const cy = cytoscape({
+        style: graphStyle || DEFAULT_GRAPH_STYLE,
+        userZoomingEnabled: enableMouseZoom,
+        userPanningEnabled: enablePanning,
     });
 
     cy.stixviewContainer = viewer.querySelector('.stix-graph');
     cy.minZoom(minZoom || 0.3);
     cy.maxZoom(maxZoom || 2.5);
-
-    cy.highlightedObjects = highlightedObjects || [];
-    cy.hiddenObjects = hiddenObjects || [];
-    cy.showMarkings = showMarkings;
 
     if (showSidebar) {
         const sidebar = document.createElement('div');
@@ -653,52 +344,96 @@ function initGraph(element, options, dataFetchCallback) {
     }
 
     cy.layoutName = layout;
-    cy.stixId = stixId;
+    cy.stixId = element.dataset.stixViewId;
     cy.element = element;
+    cy.sidebarRender = sidebarRender;
+
+    function toggleLabels(showLabels) {
+        cy.style()
+            .selector('node')
+            .style('label', showLabels ? 'data(label)' : '')
+            .update();
+    }
 
     const graph = {
         cy: cy,
         element: element,
-        options: options,
-        runLayout: function(layoutName) {
-            return runLayout(cy, layoutName);
+        viewProps: {
+            showLabels: showLabels,
         },
-        enableLabels: function() {
-            cy.style()
-                .selector('node')
-                .style('label', 'data(label)')
-                .update();
+        runLayout: (layoutName) => runLayout(cy, layoutName),
+        toggleLabels: toggleLabels,
+        fit: () => cy.fit(),
+        toggleLoading: (isLoading) => {
+            if (isLoading) {
+                element.classList.add('loading');
+                removePlaceholder(element);
+            } else {
+                element.classList.remove('loading');
+            }
         },
-        disableLabels: function() {
-            cy.style()
-                .selector('node')
-                .style('label', '')
-                .update();
-        },
-        fit: function() {
-            cy.fit();
-        },
-        markAsLoading: function() {
-            element.classList.add('loading');
-            removePlaceholder(element);
-        },
-        markAsNotLoading: function() {
-            element.classList.remove('loading');
+        setSidebarRender: () => {
+            cy.sidebarRender = sidebarRender;
         },
     };
 
-    // ??? not the right place to fix mouse drift
     cy.resize();
 
     return graph;
 }
 
+
 function removePlaceholder(element) {
     const placeholder = element.querySelector('.viewer-placeholder');
-    if (placeholder && placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
+    if (placeholder && placeholder.parentNode) {
+        placeholder.parentNode.removeChild(placeholder);
+    }
 }
 
-function loadGraph(graph, bundle, showIdrefs, callback) {
+
+function attachTag(cy, node, tag, placement) {
+    const div = document.createElement('div');
+    div.innerHTML = tag.value.toUpperCase();
+    div.classList.add('marking-tag');
+    div.classList.add(tag.css);
+
+    placement = placement || 'right-start';
+
+    const popper = node.popper({
+        content: () => {
+            cy.element.appendChild(div);
+            return div;
+        },
+        popper: {
+            placement: placement,
+        },
+    });
+    const update = () => {
+        popper.update();
+        const dim = Math.min(Math.max(cy.zoom() * 8, 2), 10);
+        div.style.fontSize = dim + 'pt';
+        div.style.lineHeight = Math.ceil(dim) + 'pt';
+    };
+    node.on('position', update);
+    cy.on('pan zoom resize', update);
+    return {
+        element: div,
+        removeListeners: () => {
+            cy.off('pan zoom resize', update);
+        },
+    };
+}
+
+
+function loadGraph(graph, bundle, dataProps, callback) {
+    const {
+        highlightedObjects,
+        hiddenObjects,
+        showTlpAsTags,
+        showMarkingNodes,
+        showIdrefs,
+    } = dataProps;
+
     const cy = graph.cy;
     cy.remove('node');
     cy.remove('edge');
@@ -707,23 +442,52 @@ function loadGraph(graph, bundle, showIdrefs, callback) {
 
     removePlaceholder(graph.element);
 
-    const graphElements = makeElements(
+    const graphElements = bundleToGraphElements(
         bundle,
-        showIdrefs,
-        cy.highlightedObjects,
-        cy.hiddenObjects,
-        cy.showMarkings);
+        {
+            highlightedObjects,
+            hiddenObjects,
+            showTlpAsTags,
+            showMarkingNodes,
+            showIdrefs,
+        }
+    );
 
     cy.add(graphElements);
-    cy.raw_data = bundle;
+    cy.bundle = bundle;
     cy.once('layoutstop', () => callback && callback(graph));
 
-    if (!graph.options.disableLabels) {
-        cy.style()
-            .selector('node')
-            .style('label', 'data(label)')
-            .update();
+    if (cy.tags) {
+        // clean up all tag elements
+        cy.tags.forEach((tag) => {
+            tag.removeListeners();
+            const el = tag.element;
+            el.parentNode && el.parentNode.removeChild(el);
+        });
+        cy.tags = [];
     }
+
+    if (showTlpAsTags) {
+        cy.tags = [];
+        cy.nodes().forEach((node) => {
+            const data = node.data();
+            if (!data.tags || !data.tags.length) {
+                return;
+            }
+            const placements = ['right-start', 'right', 'right-end'];
+
+            // at the moment only 3 tags are supported
+            const tags = data.tags.slice(0, 3);
+
+            tags.forEach((tag, index) => {
+                const placement = placements[index];
+                const obj = attachTag(cy, node, tag, placement);
+                cy.tags.push(obj);
+            });
+        });
+    }
+
+    graph.toggleLabels(graph.viewProps.showLabels);
 
     if (!graphElements) {
         callback && callback(graph);
@@ -731,17 +495,11 @@ function loadGraph(graph, bundle, showIdrefs, callback) {
     initDownloadLinks(cy);
 
     runLayout(cy, cy.layoutName || DEFAULT_LAYOUT);
+
     if (cy.sidebar) {
-        initSidebar(cy, cy.stixId);
+        addSidebarListener(cy);
     }
 }
-
-//    function htmlToElement(html) {
-//        var template = document.createElement('template');
-//        html = html.trim(); // Never return a text node of whitespace as the result
-//        template.innerHTML = html;
-//        return template.content.firstChild;
-//    }
 
 
 export {initGraph, loadGraph};

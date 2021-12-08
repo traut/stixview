@@ -36,19 +36,26 @@
 
     window.addEventListener("load", function(){
         const element = document.getElementById('graph-element');
-        const graph = window.stixview.init(element, {
-            style: getStyle(),
-            hideFooter: false,
-            showSidebar: false,
-            graphWidth: element.dataset.graphWidth,
-            graphHeight: element.dataset.graphHeight,
-            onClickNode: function(node) {
-                console.log('node clicked', node);
-            }
-        });
+            const graph = window.stixview.init(
+                    element,
+                    null,
+                    () => {
+                        console.info("Graph loaded");
+                    },
+                    {}, // no additional data properties
+                    {
+                        graphStyle: getStyle(),
+                        hideFooter: false,
+                        showSidebar: false,
+                        graphWidth: element.dataset.graphWidth,
+                        graphHeight: element.dataset.graphHeight,
+                        onClickNode: function(node) {
+                            console.log('node clicked', node);
+                        }
+                    }
+                );
         const data = getData();
         graph.loadData(data);
-        console.info("Graph loaded");
     });
 
     function getStyle() {

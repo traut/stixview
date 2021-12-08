@@ -17,19 +17,26 @@
             border-color: #3e3e3e !important;
         }</style><script defer="defer" src="../stixview.bundle.js"></script></head><body><h2>Dark theme graph from inline data</h2><div id="graph-element" data-graph-width="1200" data-graph-height="1000"></div><script>window.addEventListener("load", function(){
         const element = document.getElementById('graph-element');
-        const graph = window.stixview.init(element, {
-            style: getStyle(),
-            hideFooter: false,
-            showSidebar: false,
-            graphWidth: element.dataset.graphWidth,
-            graphHeight: element.dataset.graphHeight,
-            onClickNode: function(node) {
-                console.log('node clicked', node);
-            }
-        });
+            const graph = window.stixview.init(
+                    element,
+                    null,
+                    () => {
+                        console.info("Graph loaded");
+                    },
+                    {}, // no additional data properties
+                    {
+                        graphStyle: getStyle(),
+                        hideFooter: false,
+                        showSidebar: false,
+                        graphWidth: element.dataset.graphWidth,
+                        graphHeight: element.dataset.graphHeight,
+                        onClickNode: function(node) {
+                            console.log('node clicked', node);
+                        }
+                    }
+                );
         const data = getData();
         graph.loadData(data);
-        console.info("Graph loaded");
     });
 
     function getStyle() {
