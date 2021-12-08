@@ -459,7 +459,9 @@ function getNodeIcon(obj) {
         if (obj.definition && obj.definition.tlp) {
             const tlpValue = obj.definition.tlp.toLowerCase();
             icon.color = TLP_HEX_COLORS[tlpValue] || '#2E8BC0';
-        };
+        } else {
+            icon.color = '#2E8BC0';
+        }
     }
     return icon;
 }

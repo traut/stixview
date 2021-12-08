@@ -16,13 +16,10 @@
             padding: 10px 20px 0px;
         }
         a {
-            color: #aaa;
+            color: black;
         }
         .toolbar input#fileupload {
-            margin: 5px 0px 0px;
-        }
-        .toolbar .tip {
-            color: #ccc;
+            margin: 2px 0px 0px;
         }
     </style>
     <script src="https://unpkg.com/jquery"></script>
@@ -41,13 +38,12 @@
     <button id="fit-graph">Fit graph</button>
     |
     <button id="toggle-tlp-as-tags">TLP as nodes / tags</button>
-    |
-    <button id="toggle-idrefs">Toggle idrefs</button>
-    |
-    <span class="tip">Cmd+Click for multiselect</span>
-    |
-    <a href="?bundle=https://gist.githubusercontent.com/traut/05d70be673133b0b4c938057fb38da04/raw/d673ee831d31fcef090b134e6397a896dfc41f7f/stix21-sample-bundle.json">load an example</a> 
-    <input type="file" id="fileupload" style="float:right"/>
+    <span style="float:right">
+        <span style="margin: 5px 5px">
+            <a href="?bundle=https://gist.githubusercontent.com/traut/05d70be673133b0b4c938057fb38da04/raw/d673ee831d31fcef090b134e6397a896dfc41f7f/stix21-sample-bundle.json">load an example</a> |
+        </span>
+        <input type="file" id="fileupload" style="float:right"/>
+    </span>
 </div>
 
 <div id="graph" 
@@ -99,13 +95,6 @@
             });
 
             $("#fit-graph").on('click', () => graph.fit());
-
-            let showIdrefs = false;
-            $("#toggle-idrefs").on('click', function(e) {
-                e.preventDefault();
-                showIdrefs = !showIdrefs;
-                graph.reloadData({showIdrefs: showIdrefs});
-            });
         });
     });
 

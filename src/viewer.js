@@ -348,13 +348,6 @@ function initGraph(element, viewProps, dataFetchCallback) {
     cy.element = element;
     cy.sidebarRender = sidebarRender;
 
-    function toggleLabels(showLabels) {
-        cy.style()
-            .selector('node')
-            .style('label', showLabels ? 'data(label)' : '')
-            .update();
-    }
-
     const graph = {
         cy: cy,
         element: element,
@@ -362,7 +355,12 @@ function initGraph(element, viewProps, dataFetchCallback) {
             showLabels: showLabels,
         },
         runLayout: (layoutName) => runLayout(cy, layoutName),
-        toggleLabels: toggleLabels,
+        toggleLabels: (showLabels) => {
+            cy.style()
+                .selector('node')
+                .style('label', showLabels ? 'data(label)' : '')
+                .update();
+        },
         fit: () => cy.fit(),
         toggleLoading: (isLoading) => {
             if (isLoading) {

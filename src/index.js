@@ -66,6 +66,8 @@ function init(element, initCallback, loadCallback, extraDataProps, extraViewProp
 
     graph = {
         ...graph,
+        dataProps: dataProps,
+        viewProps: viewProps,
         loadData: loadDataInGraphCallback,
         loadDataFromFile: function(file) {
             if (file && file.type == 'application/json') {
