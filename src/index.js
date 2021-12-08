@@ -10,8 +10,8 @@ const initCallbacks = {};
 const loadCallbacks = {};
 
 function init(element, initCallback, loadCallback, extraDataProps, extraViewProps) {
-    if (element in registry) {
-        return registry[element];
+    if (element.stixViewId && element.stixViewId in registry) {
+        return registry[element.stixViewId];
     }
     const gistId = element.dataset.stixGistId;
     const gistFile = element.dataset.gistFile;
@@ -137,7 +137,9 @@ function init(element, initCallback, loadCallback, extraDataProps, extraViewProp
     }
 
     element.dataset.stixViewId = Math.random().toString(16).slice(2);
-    registry[element] = graph;
+    registry[element.dataset.stixViewId] = graph;
+
+    element.stixViewId = element.dataset.stixViewId;
 
     return graph;
 }
