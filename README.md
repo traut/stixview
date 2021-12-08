@@ -25,6 +25,7 @@ To see Stixview in action, take a look at these demo pages:
 * [Viewer](https://traut.github.io/stixview/dist/demos/viewer.html) — graph viewer with custom controls.
 * [Drag-n-drop](https://traut.github.io/stixview/dist/demos/drag-n-drop.html) — graph views with drag-n-drop enabled.
 * [Dark theme graph from inline data](https://traut.github.io/stixview/dist/demos/load-data.html) — rendering graph from inline STIX2 bundle and custom styling.
+* [TLP tags and custom sidebar content renderer](https://traut.github.io/stixview/dist/demos/tags-and-custom-sidebar.html) — TLP marking definitions shown as tags and sidebar is rendered with provided function.
 * [Examples of various configuration settings](https://traut.github.io/stixview/dist/demos/misc.html)
 
 
@@ -52,7 +53,7 @@ Example of a graph holder div:
 ```html
 <div data-stix-gist-id="6a0fbb0f6e7faf063c748b23f9c7dc62"
      data-show-sidebar=true
-     data-disable-mouse-zoom=true
+     data-enable-mouse-zoom=false
      data-graph-width=500
      data-graph-height=300>
 </div>
@@ -74,21 +75,23 @@ Stixview supports these `data-` attributes:
 
 `caption` — a title of the graph. Header is not shown if `caption` is not set.
 
-`hide-footer` (`false` by default) — hide graph footer with a download link to STIX2 bundle.
+`show-footer` (`true` by default) — show a footer with the download links to STIX2 bundle and PNG file.
 
-`show-sidebar` (`false` by default) — enable a sidebar with object details, opened when object is clicked on.
+`show-sidebar` (`true` by default) — enable a sidebar with object details, opened when object is clicked on.
+
+`show-tlp-as-tags` (`true` by default) — show connected TLP marking definition objects as tags on entities.
+
+`show-marking-nodes` (`true` by default) — show the marking definition nodes.
+
+`show-labels` (`true` by default) — show node labels.
 
 `show-idrefs` (`false` by default) — show placeholder objects for ids mentioned in the relationships but not present in a bundle.
 
 `graph-layout` (`cola` by default) — name of the graph layout algorythm. Supported algorythms are `cola` , `klay`, `cose-bilkent`, `cise`, `grid` and `dagre`.
 
-`disable-mouse-zoom` (`false` by default) — disable mouse wheel zoom.
+`enable-mouse-zoom` (`true` by default) — enable mouse wheel zoom.
 
-`disable-panning` (`false` by default) — disable panning in the graph, making graph view fixed. Users will still be able to drag nodes around.
-
-`disable-labels` (`false` by default) — disable node labels.
-
-`show-markings` (`false` by default) — render `marking-definition` objects. These objects are usually heavily connected, so skipping them improves graph readability.
+`enable-panning` (`true` by default) — enable panning in the graph. If `false`, a graph has a fixed view. Users will still be able to drag nodes around.
 
 `highlighted-objects` — a string with comma-separated STIX2 ids. If set, graph will contain _only objects with ids listed_.
 
@@ -124,19 +127,19 @@ Graph is an object with properties:
 
 `element` — DOM element that holds a graph.
 
-`options` – configured graph options.
+`dataProps` – configured data filtering properties.
+
+`viewProps` – configured viewing properties.
 
 `runLayout(name)` — run specific layout on a graph.
 
-`enableLabels()` — enable labels in a graph.
-
-`disableLabels()` — disable labels in a graph.
+`reloadData()` — reload graph data with new data filtering properties.
 
 `fit()` — fit graph fully into a graph view.
 
-`showIdrefs(callback)` — show idref placeholders on a graph. This will trigger layout recalculation. Callback is triggered when layout algorithm finishes.
+`toggleLabels(<bool-value>)` — show / hide node labels.
 
-`hideIdrefs(callback)` — hide idref placeholders on a graph. This will trigger layout recalculation. Callback is triggered when layout algorithm finishes.
+`toggleLoading(<bool-value>)` — show / hide loading overlay.
 
 `loadData(data)` — load STIX2 bundle from `data` JSON object and render on a graph.
 
