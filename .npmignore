@@ -3,3 +3,4 @@
 .npmignore
 node_module
 _config.yml
+tmp/
