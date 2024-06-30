@@ -86,7 +86,7 @@ function mostRelaxedTlp(tlpMarkings) {
         'v2-green',
         'v2-amber',
         'v2-amber-strict',
-        'v2-red'
+        'v2-red',
     ];
     const smallestIndex = (
         tlpMarkings
