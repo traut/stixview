@@ -1,5 +1,6 @@
 import _ from 'underscore';
 
+// SDOs
 const attackPatternIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/attack-pattern.svg');
 const campaignIcon = require(
@@ -30,21 +31,85 @@ const observedDataIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/observed-data.svg');
 const opinionIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/opinion.svg');
-const relationshipIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/relationship.svg');
 const reportIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/report.svg');
-const sightingIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/sighting.svg');
 const threatActorIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/threat-actor.svg');
 const toolIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/tool.svg');
 const vulnerabilityIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/vulnerability.svg');
+// stix4doge custom
+const weaknessIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/weakness.svg');
 
-const hypothesisIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/x-eclecticiq-hypothesis.svg');
+// SROs
+
+const relationshipIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/relationship.svg');
+const sightingIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/sighting.svg');
+
+// SCOs
+
+const artifactIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/artifact.svg');
+const autonomousSystemIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/autonomous-system.svg');
+const directoryIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/directory.svg');
+const domainNameIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/domain-name.svg');
+const emailAddrIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/email-addr.svg');
+const emailMessageIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/email-message.svg');
+const fileIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/file.svg');
+const ipv4AddrIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/ipv4-addr.svg');
+const ipv6AddrIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/ipv6-addr.svg');
+const macAddrIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/mac-addr.svg');
+const mutexIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/mutex.svg');
+const networkTrafficIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/network-traffic.svg');
+const processIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/process.svg');
+const softwareIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/software.svg');
+const urlIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/url.svg');
+const userAccountIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/user-account.svg');
+const userAgentIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/user-agent.svg');
+const windowsRegistryKeyIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/windows-registry-key.svg');
+const x509CertificateIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/x509-certificate');
+// stix4doge custom
+const bankAccountIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/bank-account.svg');
+const bankCardIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/bank-card.svg');
+const cryptocurrencyTransactionIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/cryptocurrency-transaction.svg');
+const cryptocurrencyWalletIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/cryptocurrency-wallet.svg');
+const phoneNumberIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/phone-number.svg');
+
+// SMOs
+
+const extensionDefinitionIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/extension-definition.svg');
+const languageContentIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/language-content.svg');
+const markingDefinitionIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/marking-definition.svg');
 
 function encodeSvg(icon) {
     return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(icon);
@@ -159,12 +224,6 @@ const iconPerType = {
     'marking-definition': {
         color: '#72d1fb',
         shape: 'tag',
-    },
-    // custom EclecticIQ object
-    'x-eclecticiq-hypothesis': {
-        color: '#009688',
-        shape: 'ellipse',
-        image: encodeSvg(hypothesisIcon),
     },
     // idref placeholder node
     'idref': {
