@@ -39,19 +39,15 @@ const toolIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/tool.svg');
 const vulnerabilityIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/vulnerability.svg');
-// stix4doge custom
+// DOGESEC custom SDO
 const weaknessIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/weakness.svg');
-
 // SROs
-
 const relationshipIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/relationship.svg');
 const sightingIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/sighting.svg');
-
 // SCOs
-
 const artifactIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/artifact.svg');
 const autonomousSystemIcon = require(
@@ -84,13 +80,11 @@ const urlIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/url.svg');
 const userAccountIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/user-account.svg');
-const userAgentIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/user-agent.svg');
 const windowsRegistryKeyIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/windows-registry-key.svg');
 const x509CertificateIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/x509-certificate');
-// stix4doge custom
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/x509-certificate.svg');
+// DOGESEC custom SCOs
 const bankAccountIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/bank-account.svg');
 const bankCardIcon = require(
@@ -101,21 +95,15 @@ const cryptocurrencyWalletIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/cryptocurrency-wallet.svg');
 const phoneNumberIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/phone-number.svg');
-
-// SMOs
-
-const extensionDefinitionIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/extension-definition.svg');
-const languageContentIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/language-content.svg');
-const markingDefinitionIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/marking-definition.svg');
+const userAgentIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/user-agent.svg');
 
 function encodeSvg(icon) {
     return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(icon);
 }
 
 const iconPerType = {
+    // SDOs
     'attack-pattern': {
         color: '#2277b5',
         shape: 'ellipse',
@@ -191,20 +179,10 @@ const iconPerType = {
         shape: 'ellipse',
         image: encodeSvg(opinionIcon),
     },
-    'relationship': {
-        color: '#cdd6d8',
-        shape: 'ellipse',
-        image: encodeSvg(relationshipIcon),
-    },
     'report': {
         color: '#769279',
         shape: 'ellipse',
         image: encodeSvg(reportIcon),
-    },
-    'sighting': {
-        color: '#eb5e2a',
-        shape: 'ellipse',
-        image: encodeSvg(sightingIcon),
     },
     'threat-actor': {
         color: '#e61b5c',
@@ -221,8 +199,156 @@ const iconPerType = {
         shape: 'ellipse',
         image: encodeSvg(vulnerabilityIcon),
     },
+    // DOGESEC custom SDO
+    'weakness': {
+        color: '#8600ff',
+        shape: 'ellipse',
+        image: encodeSvg(weaknessIcon),
+    },
+    // SROs
+    'relationship': {
+        color: '#cdd6d8',
+        shape: 'ellipse',
+        image: encodeSvg(relationshipIcon),
+    },
+    'sighting': {
+        color: '#eb5e2a',
+        shape: 'ellipse',
+        image: encodeSvg(sightingIcon),
+    },
+    // SCOs
+    'artifact': {
+        color: '#95e5fa',
+        shape: 'ellipse',
+        image: encodeSvg(artifactIcon),
+    },
+    'autonomous-system': {
+        color: '#a1f880',
+        shape: 'ellipse',
+        image: encodeSvg(autonomousSystemIcon),
+    },
+    'directory': {
+        color: '#b7f5ce',
+        shape: 'ellipse',
+        image: encodeSvg(directoryIcon),
+    },
+    'domain-name': {
+        color: '#ffb9a7',
+        shape: 'ellipse',
+        image: encodeSvg(domainNameIcon),
+    },
+    'email-addr': {
+        color: '#9180f2',
+        shape: 'ellipse',
+        image: encodeSvg(emailAddrIcon),
+    },
+    'email-message': {
+        color: '#f981e5',
+        shape: 'ellipse',
+        image: encodeSvg(emailMessageIcon),
+    },
+    'file': {
+        color: '#c794bb',
+        shape: 'ellipse',
+        image: encodeSvg(fileIcon),
+    },
+    'ipv4-addr': {
+        color: '#de82ab',
+        shape: 'ellipse',
+        image: encodeSvg(ipv4AddrIcon),
+    },
+    'ipv6-addr': {
+        color: '#de82ab',
+        shape: 'ellipse',
+        image: encodeSvg(ipv6AddrIcon),
+    },
+    'mac-addr': {
+        color: '#f7b8cb',
+        shape: 'ellipse',
+        image: encodeSvg(macAddrIcon),
+    },
+    'mutex': {
+        color: '#f0e499',
+        shape: 'ellipse',
+        image: encodeSvg(mutexIcon),
+    },
+    'network-traffic': {
+        color: '#84cff0',
+        shape: 'ellipse',
+        image: encodeSvg(networkTrafficIcon),
+    },
+    'process': {
+        color: '#bbc799',
+        shape: 'ellipse',
+        image: encodeSvg(processIcon),
+    },
+    'software': {
+        color: '#e991ca',
+        shape: 'ellipse',
+        image: encodeSvg(softwareIcon),
+    },
+    'url': {
+        color: '#cecff1',
+        shape: 'ellipse',
+        image: encodeSvg(urlIcon),
+    },
+    'user-account': {
+        color: '#d5bf84',
+        shape: 'ellipse',
+        image: encodeSvg(userAccountIcon),
+    },
+    'windows-registry-key': {
+        color: '#84c4aa',
+        shape: 'ellipse',
+        image: encodeSvg(windowsRegistryKeyIcon),
+    },
+    'x509-certificate': {
+        color: '#f6a0f2',
+        shape: 'ellipse',
+        image: encodeSvg(x509CertificateIcon),
+    },
+    // DOGESEC SCOs
+    'bank-account': {
+        color: '#e8e4aa',
+        shape: 'ellipse',
+        image: encodeSvg(bankAccountIcon),
+    },
+    'bank-card': {
+        color: '#91b2b5',
+        shape: 'ellipse',
+        image: encodeSvg(bankCardIcon),
+    },
+    'cryptocurrency-transaction': {
+        color: '#dee9a7',
+        shape: 'ellipse',
+        image: encodeSvg(cryptocurrencyTransactionIcon),
+    },
+    'cryptocurrency-wallet': {
+        color: '#9cdab8',
+        shape: 'ellipse',
+        image: encodeSvg(cryptocurrencyWalletIcon),
+    },
+    'phone-number': {
+        color: '#e2bdef',
+        shape: 'ellipse',
+        image: encodeSvg(phoneNumberIcon),
+    },
+    'user-agent': {
+        color: '#98c7ef',
+        shape: 'ellipse',
+        image: encodeSvg(userAgentIcon),
+    },
+    // SMOs
+    'extension-definition': {
+        color: '#b0d799',
+        shape: 'tag',
+    },
     'marking-definition': {
         color: '#72d1fb',
+        shape: 'tag',
+    },
+    'language-content': {
+        color: '#ff1744',
         shape: 'tag',
     },
     // idref placeholder node
@@ -231,33 +357,6 @@ const iconPerType = {
         shape: 'octagon',
     },
 };
-
-
-// Cyber-observable Objects colors
-
-const cyberObsColors = {
-    'artifact': '#155126',
-    'autonomous-system': '#99e5ad',
-    'directory': '#2d5192',
-    'domain-name': '#4cf185',
-    'email-addr': '#489f90',
-    'email-message': '#abd533',
-    'mime-part-type': '#4233a6',
-    'file': '#bfd6fa',
-    'archive-ext': '#7487fb',
-    'ipv4-addr': '#c338c5',
-    'ipv6-addr': '#eca2d5',
-    'mac-addr': '#782857',
-    'mutex': '#2c97e0',
-    'network-traffic': '#39970e',
-    'process': '#d6061a',
-    'software': '#e69976',
-    'url': '#914c0f',
-    'user-account': '#f4d403',
-    'windows-registry-key': '#f23387',
-    'x509-certificate': '#e0d59b',
-};
-
 
 const unknownIconTmpl = `
 <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -278,7 +377,6 @@ const unknownIconTmpl = `
 function getPlaceholderIcon(nodeType) {
     const template = _.template(unknownIconTmpl);
     const letter = nodeType.charAt(0).toUpperCase();
-    const color = cyberObsColors[nodeType] || '#B99435';
     return {
         color: color,
         shape: 'ellipse',

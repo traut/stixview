@@ -43,7 +43,6 @@ or use [unpkg](https://unpkg.com) CDN service:
 <script src="https://unpkg.com/stixview/dist/stixview.bundle.js" type="text/javascript"></script>
 ```
 
-
 ## API
 
 The library relies heavily on [data attributes](https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes).
@@ -117,7 +116,6 @@ The library, when used in a browser, will register `stixview` variable on `windo
 `onLoad(selector, callback)` – listener hook for graph's load event on a DOM element that matches provided `selector` value (see [demo](https://traut.github.io/stixview/dist/demos/viewer.html) for usage example). Callback receive instance of a graph interface.
 
 `init(element, properties, initCallback, loadCallback)` — method that initiates a graph view in specified `element` with provided `properties` that override defaults (see [demo](https://traut.github.io/stixview/dist/demos/load-data.html) for usage example).
-
 
 ### Graph object
 
