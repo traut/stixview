@@ -134,6 +134,8 @@
     -o-user-select: none;
 }
 
+/* tlp v1 */
+
 .marking-tag-tlp-white {
     color: black;
     background-color: white;
@@ -157,6 +159,40 @@
     background-color: red;
     border-color: red;
 }
+
+/* tlp v2 */
+
+.marking-tag-tlpv2-clear {
+    color: black;
+    background-color: white;
+    border-color: black;
+}
+
+.marking-tag-tlpv2-green {
+    color: white;
+    background-color: green;
+    border-color: green;
+}
+
+.marking-tag-tlpv2-amber {
+    color: white;
+    background-color: orange;
+    border-color: orange;
+}
+
+.marking-tag-tlpv2-amber-strict {
+    color: white;
+    background-color: orange;
+    border-color: orange;
+}
+
+.marking-tag-tlpv2-red {
+    color: white;
+    background-color: red;
+    border-color: red;
+}
+
+/* tlp unknown */
 
 .marking-tag-tlp-custom {
     color: black;

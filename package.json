@@ -1,6 +1,6 @@
 {
   "name": "stixview",
-  "version": "2.1.2a1",
+  "version": "2.1.3a1",
   "description": "Embeddable STIX2 graph viewer in JS",
   "main": "src/index.js",
   "repository": {
@@ -56,6 +56,6 @@
     "html-webpack-plugin": "^5.5.0",
     "style-loader": "^3.3.1",
     "webpack": "^5.61.0",
-    "webpack-cli": "^4.9.1"
+    "webpack-cli": "^5.1.4"
   }
 }
