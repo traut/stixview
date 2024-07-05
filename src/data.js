@@ -34,48 +34,48 @@ function getTlpMarkings(bundle) {
         // tlp v1
         'marking-definition--613f2e26-407d-48c7-9eca-b8e91df99dc9': {
             'id': 'marking-definition--613f2e26-407d-48c7-9eca-b8e91df99dc9',
-            'value': 'white',
+            'value': 'WHITE',
             'css': 'marking-tag-tlp-white',
         },
         'marking-definition--34098fce-860f-48ae-8e50-ebd3cc5e41da': {
             'id': 'marking-definition--34098fce-860f-48ae-8e50-ebd3cc5e41da',
-            'value': 'green',
+            'value': 'GREEN',
             'css': 'marking-tag-tlp-green',
         },
         'marking-definition--f88d31f6-486f-44da-b317-01333bde0b82': {
             'id': 'marking-definition--f88d31f6-486f-44da-b317-01333bde0b82',
-            'value': 'amber',
+            'value': 'AMBER',
             'css': 'marking-tag-tlp-amber',
         },
         'marking-definition--5e57c739-391a-4eb3-b6be-7d15ca92d5ed': {
             'id': 'marking-definition--5e57c739-391a-4eb3-b6be-7d15ca92d5ed',
-            'value': 'red',
+            'value': 'RED',
             'css': 'marking-tag-tlp-red',
         },
         // tlp v2
         'marking-definition--94868c89-83c2-464b-929b-a1a8aa3c8487': {
             'id': 'marking-definition--94868c89-83c2-464b-929b-a1a8aa3c8487',
-            'value': 'v2-clear',
+            'value': 'CLEAR',
             'css': 'marking-tag-tlpv2-clear',
         },
         'marking-definition--bab4a63c-aed9-4cf5-a766-dfca5abac2bb': {
             'id': 'marking-definition--bab4a63c-aed9-4cf5-a766-dfca5abac2bb',
-            'value': 'v2-green',
+            'value': 'GREEN',
             'css': 'marking-tag-tlpv2-green',
         },
         'marking-definition--55d920b0-5e8b-4f79-9ee9-91f868d9b421': {
             'id': 'marking-definition--55d920b0-5e8b-4f79-9ee9-91f868d9b421',
-            'value': 'v2-amber',
+            'value': 'AMBER',
             'css': 'marking-tag-tlpv2-amber',
         },
         'marking-definition--939a9414-2ddd-4d32-a0cd-375ea402b003': {
             'id': 'marking-definition--939a9414-2ddd-4d32-a0cd-375ea402b003',
-            'value': 'v2-amber-strict',
+            'value': 'AMBER+STRICT',
             'css': 'marking-tag-tlpv2-amber-strict',
         },
         'marking-definition--e828b379-4e03-4974-9ac4-e53a884c97c1': {
             'id': 'marking-definition--e828b379-4e03-4974-9ac4-e53a884c97c1',
-            'value': 'v2-red',
+            'value': 'RED',
             'css': 'marking-tag-tlpv2-red',
         },
     };
