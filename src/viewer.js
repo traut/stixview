@@ -97,6 +97,22 @@ const DEFAULT_GRAPH_STYLE = [
         },
     },
     {
+        selector: 'node[type="extension-definition"]',
+        style: {
+            'width': NODE_WIDTH / 2,
+            'height': NODE_HEIGHT / 2,
+            'font-size': '8pt',
+        },
+    },
+    {
+        selector: 'node[type="language-content"]',
+        style: {
+            'width': NODE_WIDTH / 2,
+            'height': NODE_HEIGHT / 2,
+            'font-size': '8pt',
+        },
+    },
+    {
         selector: 'node[type="idref"]',
         style: {
             'width': NODE_WIDTH / 2,

@@ -77,7 +77,17 @@ function mostRelaxedTlp(tlpMarkings) {
         return;
     }
     // STIX2 TLP spectrum
-    const tlp = ['white', 'green', 'amber', 'red'];
+    const tlp = [
+        'white',
+        'green',
+        'amber',
+        'red',
+        'v2-clear',
+        'v2-green',
+        'v2-amber',
+        'v2-amber-strict',
+        'v2-red',
+    ];
     const smallestIndex = (
         tlpMarkings
             .map((m) => tlp.indexOf(m.value.toLowerCase()))
