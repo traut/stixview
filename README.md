@@ -20,13 +20,13 @@ The objective of [Stixview](https://github.com/traut/stixview) library is to pro
 
 To see Stixview in action, take a look at these demo pages:
 
-* [STIX2.1 demo](dist/demos/stix21-demo.html) — sample graph with all STIX 2.1 objects.
-* [Storyline](dist/demos/story.html) — multiple graphs per page, rendering selected entities from the same STIX bundle.
-* [Viewer](dist/demos/viewer.html) — graph viewer with custom controls.
-* [Drag-n-drop](dist/demos/drag-n-drop.html) — graph views with drag-n-drop enabled.
-* [Dark theme graph from inline data](dist/demos/load-data.html) — rendering graph from inline STIX2 bundle and custom styling.
-* [TLP tags and custom sidebar content renderer](dist/demos/tags-and-custom-sidebar.html) — TLP marking definitions shown as tags and sidebar is rendered with provided function.
-* [Examples of various configuration settings](dist/demos/misc.html)
+* [STIX2.1 demo](https://traut.github.io/stixview/dist/demos/stix21-demo.html) — sample graph with all STIX 2.1 objects.
+* [Storyline](https://traut.github.io/stixview/dist/demos/story.html) — multiple graphs per page, rendering selected entities from the same STIX bundle.
+* [Viewer](https://traut.github.io/stixview/dist/demos/viewer.html) — graph viewer with custom controls.
+* [Drag-n-drop](https://traut.github.io/stixview/dist/demos/drag-n-drop.html) — graph views with drag-n-drop enabled.
+* [Dark theme graph from inline data](https://traut.github.io/stixview/dist/demos/load-data.html) — rendering graph from inline STIX2 bundle and custom styling.
+* [TLP tags and custom sidebar content renderer](https://traut.github.io/stixview/dist/demos/tags-and-custom-sidebar.html) — TLP marking definitions shown as tags and sidebar is rendered with provided function.
+* [Examples of various configuration settings](https://traut.github.io/stixview/dist/demos/misc.html)
 
 ## Usage
 
