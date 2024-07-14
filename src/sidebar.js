@@ -6,6 +6,7 @@ function renderSidebarContent(node) {
     const entity = node.raw;
     const tmpl = _.template(`
         <img class='sidebar-type-icon'
+             style='background: <%= color %>'
              src='<%= icon %>'>
         <%= obj.type %>
         <span class='sidebar-close-icon'>×</span>
