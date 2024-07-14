@@ -1,6 +1,6 @@
 {
   "name": "stixview",
-  "version": "2.1.2a1",
+  "version": "2.1.3a1",
   "description": "Embeddable STIX2 graph viewer in JS",
   "main": "src/index.js",
   "repository": {
@@ -30,32 +30,32 @@
   "homepage": "https://github.com/traut/stixview",
   "unpkg": "dist/stixview.bundle.js",
   "dependencies": {
-    "@popperjs/core": "^2.11.0",
-    "cytoscape": "^3.20",
+    "@floating-ui/dom": "^1.6.7",
+    "cytoscape": "^3.30.0",
     "cytoscape-autopan-on-drag": "^2.2.0",
-    "cytoscape-cise": "^1.0.0",
+    "cytoscape-cise": "^2.0.0",
     "cytoscape-cola": "^2.5.0",
     "cytoscape-cose-bilkent": "^4.1.0",
-    "cytoscape-dagre": "^2.3.2",
+    "cytoscape-dagre": "^2.5.0",
     "cytoscape-euler": "^1.2.2",
     "cytoscape-klay": "^3.1.4",
-    "cytoscape-popper": "^2.0.0",
+    "cytoscape-popper": "^4.0.0",
     "eslint-utils": "^3.0.0",
-    "serialize-javascript": "^6.0.0",
+    "serialize-javascript": "^6.0.2",
     "svg-inline-loader": "^0.8.2",
-    "underscore": "^1.13.1",
-    "yarn": "^1.22.17"
+    "underscore": "^1.13.6",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.0",
-    "@babel/eslint-parser": "^7.16.0",
-    "css-loader": "^2.1.1",
-    "eslint": "^8.1.0",
+    "@babel/core": "^7.24.8",
+    "@babel/eslint-parser": "^7.24.8",
+    "css-loader": "^7.1.2",
+    "eslint": "^9.7.0",
     "eslint-config-google": "^0.14.0",
     "file-loader": "^6.2.0",
-    "html-webpack-plugin": "^5.5.0",
-    "style-loader": "^3.3.1",
-    "webpack": "^5.61.0",
-    "webpack-cli": "^4.9.1"
+    "html-webpack-plugin": "^5.6.0",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.93.0",
+    "webpack-cli": "^5.1.4"
   }
 }

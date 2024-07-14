@@ -31,6 +31,7 @@ const NODE_NAME_FIELDS = [
 
 function getTlpMarkings(bundle) {
     const tlpMarkings = {
+        // tlp v1
         'marking-definition--613f2e26-407d-48c7-9eca-b8e91df99dc9': {
             'id': 'marking-definition--613f2e26-407d-48c7-9eca-b8e91df99dc9',
             'value': 'white',
@@ -50,6 +51,32 @@ function getTlpMarkings(bundle) {
             'id': 'marking-definition--5e57c739-391a-4eb3-b6be-7d15ca92d5ed',
             'value': 'red',
             'css': 'marking-tag-tlp-red',
+        },
+        // tlp v2
+        'marking-definition--94868c89-83c2-464b-929b-a1a8aa3c8487': {
+            'id': 'marking-definition--94868c89-83c2-464b-929b-a1a8aa3c8487',
+            'value': 'clear',
+            'css': 'marking-tag-tlpv2-clear',
+        },
+        'marking-definition--bab4a63c-aed9-4cf5-a766-dfca5abac2bb': {
+            'id': 'marking-definition--bab4a63c-aed9-4cf5-a766-dfca5abac2bb',
+            'value': 'green',
+            'css': 'marking-tag-tlpv2-green',
+        },
+        'marking-definition--55d920b0-5e8b-4f79-9ee9-91f868d9b421': {
+            'id': 'marking-definition--55d920b0-5e8b-4f79-9ee9-91f868d9b421',
+            'value': 'amber',
+            'css': 'marking-tag-tlpv2-amber',
+        },
+        'marking-definition--939a9414-2ddd-4d32-a0cd-375ea402b003': {
+            'id': 'marking-definition--939a9414-2ddd-4d32-a0cd-375ea402b003',
+            'value': 'amber+strict',
+            'css': 'marking-tag-tlpv2-amber-strict',
+        },
+        'marking-definition--e828b379-4e03-4974-9ac4-e53a884c97c1': {
+            'id': 'marking-definition--e828b379-4e03-4974-9ac4-e53a884c97c1',
+            'value': 'red',
+            'css': 'marking-tag-tlpv2-red',
         },
     };
     bundle.objects.filter((obj) =>
