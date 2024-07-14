@@ -1,4 +1,4 @@
-## stixview
+# Stixview
 
 [![npm version](https://badge.fury.io/js/stixview.svg)](https://badge.fury.io/js/stixview)
 

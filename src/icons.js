@@ -377,6 +377,7 @@ const unknownIconTmpl = `
 function getPlaceholderIcon(nodeType) {
     const template = _.template(unknownIconTmpl);
     const letter = nodeType.charAt(0).toUpperCase();
+    const color = '#B99435'; // Default color for an icon without an image file
     return {
         color: color,
         shape: 'ellipse',
