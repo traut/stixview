@@ -28,10 +28,13 @@ function renderSidebarContent(node) {
         </p>
     `);
 
+    const icon = getNodeIcon(entity);
+
     return tmpl({
         obj: entity,
         nodeLabel: getNodeLabel(entity),
-        icon: getNodeIcon(entity).image,
+        icon: icon.image,
+        color: icon.color,
     });
 }
 
