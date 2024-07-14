@@ -29,6 +29,7 @@ export default [...compat.extends("google"), {
         "space-before-function-paren": "off",
         "operator-linebreak": ["error", "before"],
         "require-jsdoc": "off",
+        "valid-jsdoc": "off",
 
         "max-len": ["error", {
             code: 100,
