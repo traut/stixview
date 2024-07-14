@@ -6,6 +6,7 @@ function renderSidebarContent(node) {
     const entity = node.raw;
     const tmpl = _.template(`
         <img class='sidebar-type-icon'
+             style='background: <%= color %>'
              src='<%= icon %>'>
         <%= obj.type %>
         <span class='sidebar-close-icon'>×</span>
@@ -27,10 +28,13 @@ function renderSidebarContent(node) {
         </p>
     `);
 
+    const icon = getNodeIcon(entity);
+
     return tmpl({
         obj: entity,
         nodeLabel: getNodeLabel(entity),
-        icon: getNodeIcon(entity).image,
+        icon: icon.image,
+        color: icon.color,
     });
 }
 
