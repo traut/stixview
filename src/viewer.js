@@ -14,12 +14,7 @@ import {readFile} from './utils.js';
 import {bundleToGraphElements} from './data.js';
 import {renderSidebarContent} from './sidebar.js';
 
-import {
-  computePosition,
-  flip,
-  shift,
-  limitShift,
-} from '@floating-ui/dom';
+import {computePosition} from '@floating-ui/dom';
 
 
 cytoscape.use(klay);
@@ -32,27 +27,16 @@ cytoscape.use(cise);
 // cytoscape-popper requires an explicit factory
 // https://github.com/cytoscape/cytoscape.js-popper?tab=readme-ov-file#migration-from-v2
 function popperFactory(ref, content, opts) {
-   // see https://floating-ui.com/docs/computePosition#options
-   const popperOptions = {
-       // matching the default behaviour from Popper@2
-       // https://floating-ui.com/docs/migration#configure-middleware
-       middleware: [
-           flip(),
-           shift({limiter: limitShift()})
-       ],
-       ...opts,
-   }
-
-   function update() {
-       computePosition(ref, content, opts).then(({x, y}) => {
-           Object.assign(content.style, {
-               left: `${x}px`,
-               top: `${y}px`,
-           });
-       });
-   }
-   update();
-   return { update };
+    function update() {
+        computePosition(ref, content, opts).then(({x, y}) => {
+            Object.assign(content.style, {
+                left: `${x}px`,
+                top: `${y}px`,
+            });
+        });
+    }
+    update();
+    return {update};
 }
 
 cytoscape.use(cytoscapePopper(popperFactory));
@@ -257,15 +241,15 @@ function clustersForCise(cy) {
     // https://github.com/iVis-at-Bilkent/cytoscape.js-cise/
 
     const options = {};
-    let clusters = cy.elements().markovClustering(options);
+    const clusters = cy.elements().markovClustering(options);
 
-    for(var i = 0; i < clusters.length; i++){
-        for(var j = 0; j < clusters[i].length; j++){
+    for (let i = 0; i < clusters.length; i++) {
+        for (let j = 0; j < clusters[i].length; j++) {
             clusters[i][j]._private.data.clusterID = i;
         }
     };
 
-    let arrayOfClusterArrays = [];
+    const arrayOfClusterArrays = [];
     cy.nodes().forEach(function (node) {
         arrayOfClusterArrays.push([node.data('id')]);
     });
@@ -274,9 +258,8 @@ function clustersForCise(cy) {
 
 
 function runLayout(cy, layoutName) {
-
     const localProps = {};
-    if (layoutName === "cise") {
+    if (layoutName === 'cise') {
         localProps.clusters = clustersForCise(cy);
     }
 
