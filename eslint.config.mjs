@@ -15,11 +15,11 @@ const compat = new FlatCompat({
 export default [...compat.extends("google"), {
     languageOptions: {
         parser: babelParser,
-        ecmaVersion: 5,
-        sourceType: "script",
-
+        ecmaVersion: 6,
+        sourceType: "module",
         parserOptions: {
             requireConfigFile: false,
+            sourceType: "module",
         },
     },
 

@@ -19,7 +19,7 @@ jobs:
           # Defaults to the user or organization that owns the workflow file
           scope: '@traut'
       - run: yarn
-      - run: yarn npm publish
+      - run: yarn publish --verbose --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   release-github:
@@ -33,6 +33,6 @@ jobs:
           # Defaults to the user or organization that owns the workflow file
           scope: '@traut'
       - run: yarn
-      - run: yarn npm publish
+      - run: yarn publish --verbose --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
