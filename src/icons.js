@@ -93,6 +93,8 @@ const cryptocurrencyTransactionIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/cryptocurrency-transaction.svg');
 const cryptocurrencyWalletIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/cryptocurrency-wallet.svg');
+const cryptocurrencyExchangeIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/cryptocurrency-exchange.svg');
 const phoneNumberIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/phone-number.svg');
 const userAgentIcon = require(
@@ -327,6 +329,11 @@ const iconPerType = {
         color: '#9cdab8',
         shape: 'ellipse',
         image: encodeSvg(cryptocurrencyWalletIcon),
+    },
+    'cryptocurrency-exchange': {
+        color: '#0000ff',
+        shape: 'ellipse',
+        image: encodeSvg(cryptocurrencyExchangeIcon),
     },
     'phone-number': {
         color: '#e2bdef',
