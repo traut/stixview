@@ -4,9 +4,10 @@
 
 [Stixview](https://github.com/traut/stixview) is a JS library for embeddable interactive STIX2 graphs.
 
-![Stixview graph](https://raw.githubusercontent.com/traut/stixview/master/.github/stixview-graph.png)
+> [!NOTE]  
+> Hosted version of Stixview is available at [CTIChef.com](https://ctichef.com)
 
-In addition, [jupyter-widget-stixview](https://github.com/traut/jupyter-widget-stixview) is a Jupyter notebook widget that uses Stixview to render STIX2 graphs.
+![Stixview graph](https://raw.githubusercontent.com/traut/stixview/master/.github/stixview-graph.png)
 
 ## Motivation
 
