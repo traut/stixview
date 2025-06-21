@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--https://github.com/muchdogesec/stix2icons/-->
 <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 85 85" id="windows-registry-key">
 	<path style="fill:rgb(255,255,255)" d="m 41.533493,33.289012 -9.005748,-4.409625 v 9.95424 l 9.005748,4.007623 z" />
     <path style="fill:rgb(255,255,255)" d="m 21.120183,57.750373 8.415226,3.7422 V 51.93972 l -9.005748,-4.409625 v 9.311424 c 0,0.393037 0.23141,0.749161 0.590522,0.908854 z" />
