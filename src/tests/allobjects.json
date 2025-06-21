@@ -23,7 +23,7 @@
             "created": "2020-01-01T00:00:00.000Z",
             "definition_type": "statement",
             "definition": {
-                "statement": "This object was created using: https://github.com/muchdogesec/txt2stix"
+                "statement": "This object was created using txt2stix"
             },
             "object_marking_refs": [
                 "marking-definition--94868c89-83c2-464b-929b-a1a8aa3c8487",
@@ -38,7 +38,7 @@
             "created": "2020-01-01T00:00:00.000Z",
             "modified": "2020-01-01T00:00:00.000Z",
             "name": "txt2stix",
-            "description": "https://github.com/muchdogsec/txt2stix",
+            "description": "txt2stix",
             "object_marking_refs": [
                 "marking-definition--94868c89-83c2-464b-929b-a1a8aa3c8487",
                 "marking-definition--97ba4e8b-04f6-57e8-8f6e-3a0f0a7dc0fb"
@@ -47,7 +47,7 @@
             "sectors": [
                 "technology"
             ],
-            "contact_information": "https://www.dogesec.com/contact/"
+            "contact_information": "https://example.localhost"
         },
         {
             "type": "report",
