@@ -1,6 +1,6 @@
 import _ from 'underscore';
 
-// SDOs
+// SDO: Core
 const attackPatternIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/attack-pattern.svg');
 const campaignIcon = require(
@@ -39,15 +39,40 @@ const toolIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/tool.svg');
 const vulnerabilityIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/vulnerability.svg');
-// DOGESEC custom SDO
+
+// SDO: MITRE ATT&CK
+const xMitreDetectionStrategyIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/x-mitre-detection-strategy.svg');
+const xMitreAnalyticIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/x-mitre-analytic.svg');
+const xMitreLogSourceIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/x-mitre-log-source.svg');
+const xMitreTacticIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/x-mitre-tactic.svg');
+const xMitreAssetIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/x-mitre-asset.svg');
+const xMitreDataSourceIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/x-mitre-data-source.svg');
+const xMitreDataComponentIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/x-mitre-data-component.svg');
+
+// SDO: Attack Flow
+const attackFlowComponentIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/attack-flow.svg');
+const attackActionComponentIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/attack-action.svg');
+
+// SDO: dogesec
 const weaknessIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/weakness.svg');
-// SROs
-const relationshipIcon = require(
-    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/relationship.svg');
+const exploitIcon = require(
+    '!svg-inline-loader?removeSVGTagAttrs=false!../icons/exploit.svg');
+
+// SRO: Core
 const sightingIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/sighting.svg');
-// SCOs
+
+// SCO: Core
 const artifactIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/artifact.svg');
 const autonomousSystemIcon = require(
@@ -84,7 +109,8 @@ const windowsRegistryKeyIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/windows-registry-key.svg');
 const x509CertificateIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/x509-certificate.svg');
-// DOGESEC custom SCOs
+
+// SCO: dogesec
 const bankAccountIcon = require(
     '!svg-inline-loader?removeSVGTagAttrs=false!../icons/bank-account.svg');
 const bankCardIcon = require(
@@ -105,7 +131,7 @@ function encodeSvg(icon) {
 }
 
 const iconPerType = {
-    // SDOs
+    // SDO: Core
     'attack-pattern': {
         color: '#2277b5',
         shape: 'ellipse',
@@ -127,7 +153,7 @@ const iconPerType = {
         image: encodeSvg(groupingIcon),
     },
     'identity': {
-        color: '#9c9afe',
+        color: '#009688',
         shape: 'ellipse',
         image: encodeSvg(identityIcon),
     },
@@ -142,7 +168,7 @@ const iconPerType = {
         image: encodeSvg(indicatorIcon),
     },
     'infrastructure': {
-        color: '#aed7bf',
+        color: '#ff5722',
         shape: 'ellipse',
         image: encodeSvg(infrastructureIcon),
     },
@@ -152,7 +178,7 @@ const iconPerType = {
         image: encodeSvg(intrusionSetIcon),
     },
     'location': {
-        color: '#fc9f9d',
+        color: '#e91e63',
         shape: 'ellipse',
         image: encodeSvg(locationIcon),
     },
@@ -162,27 +188,27 @@ const iconPerType = {
         image: encodeSvg(malwareAnalysisIcon),
     },
     'malware': {
-        color: '#d4a3cb',
+        color: '#f44336',
         shape: 'ellipse',
         image: encodeSvg(malwareIcon),
     },
     'note': {
-        color: '#88c881',
+        color: '#2e7d32',
         shape: 'ellipse',
         image: encodeSvg(noteIcon),
     },
     'observed-data': {
-        color: '#fcccb8',
+        color: '#1b5e20',
         shape: 'ellipse',
         image: encodeSvg(observedDataIcon),
     },
     'opinion': {
-        color: '#909dc7',
+        color: '#8bc34a',
         shape: 'ellipse',
         image: encodeSvg(opinionIcon),
     },
     'report': {
-        color: '#779279',
+        color: '#c2185b',
         shape: 'ellipse',
         image: encodeSvg(reportIcon),
     },
@@ -201,24 +227,71 @@ const iconPerType = {
         shape: 'ellipse',
         image: encodeSvg(vulnerabilityIcon),
     },
-    // DOGESEC custom SDO
+    // SDO: MITRE ATT&CK
+    'x-mitre-detection-strategy': {
+        color: '#00bfff',
+        shape: 'ellipse',
+        image: encodeSvg(xMitreDetectionStrategyIcon),
+    },
+    'x-mitre-analytic': {
+        color: '#ff3d00',
+        shape: 'ellipse',
+        image: encodeSvg(xMitreAnalyticIcon),
+    },
+    'x-mitre-log-source': {
+        color: '#483d8b',
+        shape: 'ellipse',
+        image: encodeSvg(xMitreLogSourceIcon),
+    },
+    'x-mitre-tactic': {
+        color: '#c62828',
+        shape: 'ellipse',
+        image: encodeSvg(xMitreTacticIcon),
+    },
+    'x-mitre-asset': {
+        color: '#00ff7f',
+        shape: 'ellipse',
+        image: encodeSvg(xMitreAssetIcon),
+    },
+    'x-mitre-data-source': {
+        color: '#00bcd4',
+        shape: 'ellipse',
+        image: encodeSvg(xMitreDataSourceIcon),
+    },
+    'x-mitre-data-component': {
+        color: '#3f51b5',
+        shape: 'ellipse',
+        image: encodeSvg(xMitreDataComponentIcon),
+    },
+    // SDO: Attack Flow
+    'attack-flow': {
+        color: '#9c27b0',
+        shape: 'ellipse',
+        image: encodeSvg(attackFlowComponentIcon),
+    },
+    'attack-action': {
+        color: '#00695c',
+        shape: 'ellipse',
+        image: encodeSvg(attackActionComponentIcon),
+    },
+    // SDO: dogesec
     'weakness': {
         color: '#5e3180',
         shape: 'ellipse',
         image: encodeSvg(weaknessIcon),
     },
-    // SROs
-    'relationship': {
-        color: '#94f38b',
+    'exploit': {
+        color: '#008450',
         shape: 'ellipse',
-        image: encodeSvg(relationshipIcon),
+        image: encodeSvg(exploitIcon),
     },
+    // SRO: Core
     'sighting': {
-        color: '#eb5e2a',
+        color: '#39ff14',
         shape: 'ellipse',
         image: encodeSvg(sightingIcon),
     },
-    // SCOs
+    // SCO: Core
     'artifact': {
         color: '#95e5fa',
         shape: 'ellipse',
@@ -309,7 +382,7 @@ const iconPerType = {
         shape: 'ellipse',
         image: encodeSvg(x509CertificateIcon),
     },
-    // DOGESEC SCOs
+    // SCO: dogesec
     'bank-account': {
         color: '#e8e4aa',
         shape: 'ellipse',
