@@ -151,6 +151,9 @@ function bundleToGraphElements(bundle, dataProps) {
     // create edges for all references in inline fields
     nodes.forEach((node) => makeEdgesForRefs(node).forEach(addEdgeFiltered));
 
+    // create edges for all extensions in object.extensions
+    nodes.forEach((node) => makeEdgesForExtensions(node).forEach(addEdgeFiltered));
+
     // creates nodes for all missing TLP marking-definitions
     edges
         .filter((e) => !(nodesMap[e.data.source] && nodesMap[e.data.target]))
@@ -387,6 +390,24 @@ function makeEdgesForRefs(node) {
     return edges;
 }
 
+
+function makeEdgesForExtensions(node) {
+    const entity = node.data.raw;
+    const edges = [];
+    if (!entity?.extensions) {
+        return edges;
+    }
+    Object.keys(entity.extensions).forEach((def) => {
+        const edge = makeEdgeElement({
+            id: 'rel-' + entity.id + '-' + def,
+            source_ref: entity.id,
+            target_ref: def,
+            relationship_type: 'extension-definition',
+        });
+        edges.push(edge);
+    });
+    return edges;
+}
 
 function makeTlpNode(marking) {
     return makeNodeElement({
